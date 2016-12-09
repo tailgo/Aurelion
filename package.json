@@ -1,0 +1,33 @@
+{
+  "name": "aurelion",
+  "version": "0.1.0",
+  "description": "A game engine based on Electron and WebGL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tailgo/Aurelion.git"
+  },
+  "keywords": [
+    "Game",
+    "Engine",
+    "WebGL"
+  ],
+  "author": "tailgo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tailgo/Aurelion/issues"
+  },
+  "homepage": "https://github.com/tailgo/Aurelion#readme",
+  "devDependencies": {
+    "electron": "^1.4.11",
+    "tslint": "^4.0.2",
+    "typescript": "^2.1.4"
+  },
+  "dependencies": {
+    "@types/electron": "^1.4.29",
+    "@types/node": "0.0.2"
+  }
+}
