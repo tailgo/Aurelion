@@ -1,3 +1,7 @@
-function a (x: number): void {
-  return ;
+namespace AURELION {
+  export class Aurelion {
+    constructor() {}
+  }
 }
+
+module.exports = AURELION;

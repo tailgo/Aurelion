@@ -40,18 +40,22 @@ namespace AURELION {
     }
 
     // --- scale methods --- //
-    public scale(scale: number) {
+    public scale(scale: number): Vector2 {
       this.x *= scale;
       this.y *= scale;
+
+      return this;
     }
 
-    public divideScalar(scalar: number) {
+    public divideScalar(scalar: number): Vector2 {
       this.x /= scalar;
       this.y /= scalar;
+
+      return this;
     }
 
     // --- operation methods --- //
-    public clone() {
+    public clone(): Vector2 {
       return new Vector2(this.x, this.y);
     }
 
@@ -75,21 +79,23 @@ namespace AURELION {
       return this.x * this.x + this.y * this.y;
     }
 
-    public normalize() {
-      this.divideScalar(this.length());
+    public normalize(): Vector2 {
+      return this.divideScalar(this.length());
     }
 
-    public rotate(cx: number, cy: number, angle: number) {
+    public rotate(cx: number, cy: number, angle: number): Vector2 {
       let c = Math.cos(angle), s = Math.sin(angle);
 
       let x = this.x - cx, y = this.y - cy; // Translation
 
       this.x = x * c - y * s + cx;
       this.y = x * s + y * c + cy;
+
+      return this;
     }
 
     // --- Static methods --- //
-    public static AddVector2(v: Vector2, w: Vector2) {
+    public static AddVector2(v: Vector2, w: Vector2): Vector2 {
       return new Vector2(v.x + w.x, v.y + w.y);
     }
 
@@ -108,10 +114,9 @@ namespace AURELION {
       return v.x * w.x + v.y * w.y;
     }
 
-    public static SubVector2(v: Vector2, w: Vector2) {
+    public static SubVector2(v: Vector2, w: Vector2): Vector2 {
       return new Vector2(v.x - w.x, v.y - w.y);
     }
   }
 
 }
-
