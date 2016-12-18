@@ -1,5 +1,4 @@
-namespace AURELION {
-  export class Color {
-    constructor() {}
-  }
+'use strict';
+export class Color {
+  constructor() {}
 }
