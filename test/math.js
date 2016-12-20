@@ -1,6 +1,6 @@
 "use strict";
 var except = require('chai').expect;
-var Aurelion = require('../dist/Aurelion');
+var Aurelion = require('../lib/Aurelion');
 
 /**
  * Vector2

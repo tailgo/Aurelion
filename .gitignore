@@ -40,3 +40,8 @@ jspm_packages
 .vscode
 
 dist
+
+lib
+
+app
+aurelion.json
