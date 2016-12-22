@@ -3,12 +3,6 @@ import * as electron from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
-/**
- * Math Classes
- */
-export * from './Math/Color';
-export * from './Math/Vector2';
-export * from './Math/Vector3';
 
 global['__debug__'] = false;
 
@@ -57,7 +51,7 @@ class AurelionWindow {
     });
 
     this._electronWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'main.html'),
+      pathname: path.resolve('entrance.html'),
       protocol: 'file:',
       slashes: true
     }));

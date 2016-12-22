@@ -1,10 +1,12 @@
-// import * as electron from 'electron';
-import { ipcMain, ipcRenderer } from 'electron';
-
 class AurelionCore {
-  constructor() {}
 
-  public startApp() {};
+  constructor() {
+
+  }
+
+  public startApp() {
+    console.log('start App');
+  };
 }
 
 const Core: AurelionCore = new AurelionCore();
