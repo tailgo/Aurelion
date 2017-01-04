@@ -6,7 +6,7 @@ class AurelionCore {
 
   public startApp() {
     console.log('start App');
-  };
+  }
 }
 
 const Core: AurelionCore = new AurelionCore();
