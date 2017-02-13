@@ -1,4 +1,5 @@
-import {Vector3} from './Vector3';
+import { Vector3 } from './Vector3';
+import { Quaternion } from './Quaternion';
 
 export class Matrix4 {
   public elements: Float32Array;
@@ -170,6 +171,41 @@ export class Matrix4 {
       0, 0, 1, 0,
       0, 0, 0, 1
     );
+
+    return this;
+  }
+
+  public makeRotationFromQuaternion(q: Quaternion): Matrix4 {
+    let te = this.elements;
+
+    let x = q.x, y = q.y, z = q.z, w = q.w;
+    let x2 = x + x, y2 = y + y, z2 = z + z;
+    let xx = x * x2, xy = x * y2, xz = x * z2;
+    let yy = y * y2, yz = y * z2, zz = z * z2;
+    let wx = w * x2, wy = w * y2, wz = w * z2;
+
+    te[0] = 1 - (yy + zz);
+    te[4] = xy - wz;
+    te[8] = xz + wy;
+
+    te[1] = xy + wz;
+    te[5] = 1 - (xx + zz);
+    te[9] = yz - wx;
+
+    te[2] = xz - wy;
+    te[6] = yz + wx;
+    te[10] = 1 - (xx + yy);
+
+    // last column
+    te[3] = 0;
+    te[7] = 0;
+    te[11] = 0;
+
+    // bottom row
+    te[12] = 0;
+    te[13] = 0;
+    te[14] = 0;
+    te[15] = 1;
 
     return this;
   }

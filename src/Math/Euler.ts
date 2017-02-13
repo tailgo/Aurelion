@@ -10,6 +10,8 @@ export class Euler {
   private _z: number;
   private _order: string;
 
+  public onChangeCallback: Function;
+
   public static DefaultOrder: string = 'XYZ';
   public static RotationOrders: string[] = [
     'XYZ', 'YZX', 'ZXY',
@@ -26,6 +28,8 @@ export class Euler {
     this._y = y;
     this._z = z;
     this._order = order;
+
+    this.onChangeCallback = function () {};
   }
 
   public get x() {
@@ -34,6 +38,7 @@ export class Euler {
 
   public set x(v: number) {
     this._x = v;
+    this.onChangeCallback();
   }
 
   public get y() {
@@ -42,6 +47,7 @@ export class Euler {
 
   public set y(v: number) {
     this._y = v;
+    this.onChangeCallback();
   }
 
   public get z() {
@@ -50,6 +56,7 @@ export class Euler {
 
   public set z(v: number) {
     this._z = v;
+    this.onChangeCallback();
   }
 
   public get order() {
@@ -58,6 +65,7 @@ export class Euler {
 
   public set order(v: string) {
     this._order = v;
+    this.onChangeCallback();
   }
 
   public set(x: number, y: number, z: number, order: string): Euler {
@@ -65,6 +73,9 @@ export class Euler {
     this._y = y;
     this._z = z;
     this._order = order;
+
+    this.onChangeCallback();
+
     return this;
   }
 
@@ -74,10 +85,16 @@ export class Euler {
     this._z = euler._z;
     this._order = euler._order;
 
+    this.onChangeCallback();
+
     return this;
   }
 
-  public setFromRotationMatrix(m: Matrix4, order: string = this._order): Euler {
+  public setFromRotationMatrix(
+    m: Matrix4,
+    order: string = this._order,
+    update: boolean = true
+  ): Euler {
     let clamp = MathTool.clamp;
 
     let te = m.elements;
@@ -164,11 +181,27 @@ export class Euler {
 
     this._order = order;
 
+    if (update !== false) {
+      this.onChangeCallback();
+    }
+
     return this;
   }
 
   public setFromVector3(v: Vector3, order: string = this._order): Euler {
     return this.set(v.x, v.y, v.z, order);
+  }
+
+  public setFromQuaternion(
+      q: Quaternion,
+      order: string,
+      update: boolean
+    ): Euler {
+
+      let matrix = new Matrix4();
+      matrix.makeRotationFromQuaternion(q);
+      return this.setFromRotationMatrix(matrix, order, update);
+
   }
 
   public equals(e: Euler): boolean {
@@ -177,4 +210,10 @@ export class Euler {
       && (e.z === this._z)
       && (e.order === this._order);
   }
+
+  public onChange(callback: Function): Euler {
+    this.onChangeCallback = callback;
+    return this;
+  }
+
 }
