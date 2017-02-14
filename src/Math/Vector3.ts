@@ -10,6 +10,14 @@ export class Vector3 {
     this.z = z;
   }
 
+  public set(x: number, y: number, z: number): Vector3 {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+
+    return this;
+  }
+
   // --- Add methods --- //
   public add(v: Vector3): Vector3 {
     this.x += v.x;
