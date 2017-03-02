@@ -1,4 +1,6 @@
 'use strict';
+import { MathTool } from './MathTool';
+
 export class Vector3 {
   public x: number;
   public y: number;
@@ -14,6 +16,14 @@ export class Vector3 {
     this.x = x;
     this.y = y;
     this.z = z;
+
+    return this;
+  }
+
+  public setScalar(s: number) {
+    this.x = s;
+    this.y = s;
+    this.z = s;
 
     return this;
   }
@@ -52,11 +62,31 @@ export class Vector3 {
     return this;
   }
 
-  // --- scale methods --- //
-  public scale(scale: number): Vector3 {
-    this.x *= scale;
-    this.y *= scale;
-    this.z *= scale;
+  public multiply(v: Vector3): Vector3 {
+    this.x *= v.x;
+    this.y *= v.y;
+    this.z *= v.z;
+
+    return this;
+  }
+
+  public multiplyScalar(scalar: number) {
+    if (isFinite(scalar)) {
+      this.x *= scalar;
+      this.y *= scalar;
+      this.z *= scalar;
+    } else {
+      this.x = 0;
+      this.y = 0;
+      this.z = 0;
+    }
+    return this;
+  }
+
+  public divide(v: Vector3): Vector3 {
+    this.x /= v.x;
+    this.y /= v.y;
+    this.z /= v.z;
 
     return this;
   }
@@ -88,15 +118,54 @@ export class Vector3 {
 
   // --- get property --- //
   public length(): number {
-    return Math.sqrt(this.lengthSquared());
+    return Math.sqrt(this.lengthSq());
   }
 
-  public lengthSquared(): number {
+  public lengthSq(): number {
     return this.x * this.x + this.y * this.y + this.z * this.z;
   }
 
   public normalize(): Vector3 {
     return this.divideScalar(this.length());
+  }
+
+  public dot(v: Vector3): number {
+    return this.x * v.x + this.y * v.y + this.z * v.z;
+  }
+
+  public cross(v: Vector3): Vector3 {
+    let x = this.x, y = this.y, z = this.z;
+
+    this.x = y * v.z - z * v.y;
+    this.y = z * v.x - x * v.z;
+    this.z = x * v.y - y * v.x;
+
+    return this;
+  }
+
+  public angleTo(v: Vector3): number {
+    let theta = this.dot(v) / (Math.sqrt(this.lengthSq() * v.lengthSq()));
+    return Math.acos(MathTool.clamp(theta, -1, 1));
+  }
+
+  public lerp(v: Vector3, alpha: number) {
+    this.x += (v.x - this.x) * alpha;
+    this.y += (v.y - this.y) * alpha;
+    this.z += (v.z - this.z) * alpha;
+
+    return this;
+  }
+
+  public distanceTo(v: Vector3): number {
+    return Math.sqrt(this.distanceToSquared(v));
+  }
+
+  public distanceToSquared(v: Vector3): number {
+    let dx = this.x - v.x;
+    let dy = this.y - v.y;
+    let dz = this.z - v.z;
+
+    return dx * dx + dy * dy + dz * dz;
   }
 
   // --- Static methods --- //
