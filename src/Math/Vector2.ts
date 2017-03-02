@@ -8,6 +8,23 @@ export class Vector2 {
     this.y = y;
   }
 
+  public set(x: number, y: number): Vector2 {
+    this.x = x;
+    this.y = y;
+
+    return this;
+  }
+
+  public setX(x: number) {
+    this.x = x;
+    return this;
+  }
+
+  public setY(y: number) {
+    this.y = y;
+    return this;
+  }
+
   // --- Add methods --- //
   public add(v: Vector2): Vector2 {
     this.x += v.x;
@@ -69,6 +86,16 @@ export class Vector2 {
     return this.x === v.x && this.y === v.y;
   }
 
+  public clamp(min: Vector2, max: Vector2): Vector2 {
+    this.x = Math.max(min.x, Math.min(max.x, this.x));
+    this.y = Math.max(min.y, Math.min(max.y, this.y));
+    return this;
+  }
+
+  public dot(v: Vector2): number {
+    return this.x * this.x + this.y * this.y;
+  }
+
   // --- get property --- //
   public length(): number {
     return Math.sqrt(this.lengthSquared());
@@ -80,6 +107,31 @@ export class Vector2 {
 
   public normalize(): Vector2 {
     return this.divideScalar(this.length());
+  }
+
+  public angle(): number {
+    let angle = Math.atan2(this.y, this.x);
+    if (angle < 0) {
+      angle += 2 * Math.PI;
+    }
+    return angle;
+  }
+
+  public distanceTo(v: Vector2): number {
+    return Math.sqrt(this.distanceToSquared(v));
+  }
+
+  public distanceToSquared(v: Vector2): number {
+    let dx = this.x - v.x;
+    let dy = this.y - v.y;
+    return dx * dx + dy * dy;
+  }
+
+  public lerp(v: Vector2, alpha: number): Vector2 {
+    this.x += (v.x - this.x) * alpha;
+    this.y += (v.y - this.y) * alpha;
+
+    return this;
   }
 
   public rotate(cx: number, cy: number, angle: number): Vector2 {
