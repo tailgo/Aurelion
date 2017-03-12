@@ -54,7 +54,7 @@ export class Color {
     return this;
   }
 
-  public equals(c: Color): boolean{
+  public equals(c: Color): boolean {
     return (c.r === this.r) && (c.g === this.g) && (c.b === this.b);
   }
 }
