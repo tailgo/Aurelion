@@ -1,74 +1,60 @@
-'use strict';
+import { MathTool } from './MathTool';
+
 export class Color {
 
-  private _r: number;
-  private _g: number;
-  private _b: number;
+  public r: number = 1;
+  public g: number = 1;
+  public b: number = 1;
 
-  get r(): number {
-    return this._r;
+  constructor(r: number, g: number, b: number) {
+    return this.setRGB(r, g, b);
   }
 
-  set r(newR: number) {
-    this._r = newR;
+  public setRGB(r: number, g: number, b: number): Color {
+    this.r = r;
+    this.g = g;
+    this.b = b;
+
+    return this;
   }
 
-  get g(): number {
-    return this._g;
+  public clone() {
+    return new Color(this.r, this.g, this.b);
   }
 
-  set g(newG: number) {
-    this._g = newG;
-  }
+  public copy(c: Color): Color {
+    this.r = c.r;
+    this.g = c.g;
+    this.b = c.b;
 
-  get b(): number {
-    return this._b;
-  }
-
-  set b(newB: number) {
-    this._b = newB;
-  }
-
-  constructor(r: number = 0, g: number = 0, b: number = 0) {
-    this._r = r;
-    this._g = g;
-    this._b = b;
+    return this;
   }
 
   public add(c: Color): Color {
-    this._r += c.r;
-    this._g += c.g;
-    this._b += c.b;
+    this.r += c.r;
+    this.g += c.g;
+    this.b += c.b;
 
     return this;
   }
 
   public sub(c: Color): Color {
-    this._r = Math.max(0, this._r - c.r);
-    this._g = Math.max(0, this._g - c.g);
-    this._b = Math.max(0, this._b - c.b);
+    this.r = Math.max(0, this.r - c.r);
+    this.g = Math.max(0, this.g - c.g);
+    this.b = Math.max(0, this.b - c.b);
 
     return this;
   }
 
-  public mul(c: Color): Color {
-    this._r *= c.r;
-    this._g *= c.g;
-    this._b *= c.b;
+  public lerp(c: Color, alpha: number): Color {
+    this.r += (c.r - this.r) * alpha;
+    this.g += (c.g - this.g) * alpha;
+    this.b += (c.b - this.b) * alpha;
 
     return this;
   }
 
-  public equals(c: Color): boolean {
-    return (this._r === c.r) && (this._g === c.g) && (this._b === c.b);
-  }
-
-  public toArray(array: number[] = [], offset: number = 0): number[] {
-
-    array[offset] = this.r;
-    array[offset + 1] = this.g;
-    array[offset + 2] = this.b;
-
-    return array;
+  public equals(c: Color): boolean{
+    return (c.r === this.r) && (c.g === this.g) && (c.b === this.b);
   }
 }
