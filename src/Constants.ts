@@ -1,4 +1,3 @@
-export const REVISION = '84dev';
 export const MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };
 export const CullFaceNone = 0;
 export const CullFaceBack = 1;

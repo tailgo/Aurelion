@@ -143,6 +143,14 @@ export class Vector3 {
     return this;
   }
 
+  public negete(): Vector3 {
+    this.x = -this.x;
+    this.y = -this.y;
+    this.z = -this.z;
+
+    return this;
+  }
+
   public angleTo(v: Vector3): number {
     let theta = this.dot(v) / (Math.sqrt(this.lengthSq() * v.lengthSq()));
     return Math.acos(MathTool.clamp(theta, -1, 1));
