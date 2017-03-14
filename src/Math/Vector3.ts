@@ -45,6 +45,14 @@ export class Vector3 {
     return this;
   }
 
+  public addVectors(a: Vector3, b: Vector3): Vector3 {
+    this.x = a.x + b.x;
+    this.y = a.y + b.y;
+    this.z = a.z + b.z;
+
+    return this;
+  }
+
   // --- Subtract methods --- //
   public sub(v: Vector3): Vector3 {
     this.x -= v.x;
@@ -191,5 +199,21 @@ export class Vector3 {
     let z = v.z - w.z;
 
     return x * x + y * y + z * z;
+  }
+
+  public min(v: Vector3): Vector3 {
+    this.x = Math.min(this.x, v.x);
+    this.y = Math.min(this.y, v.y);
+    this.z = Math.min(this.z, v.z);
+
+    return this;
+  }
+
+  public max(v: Vector3): Vector3 {
+    this.x = Math.max(this.x, v.x);
+    this.y = Math.max(this.y, v.y);
+    this.z = Math.max(this.z, v.z);
+
+    return this;
   }
 }

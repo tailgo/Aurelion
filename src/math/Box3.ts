@@ -20,6 +20,30 @@ export class Box3 {
     return this;
   }
 
+  public setFromPoints(points: Array<Vector3>): Box3 {
+    this.makeEmpty();
+    for (let i = 0, il = points.length; i < il; ++i) {
+      this.expandByPoint(points[i]);
+    }
+
+    return this;
+  }
+
+  public expandByPoint(point: Vector3): Box3 {
+    this.min.min(point);
+    this.max.max(point);
+
+    return this;
+  }
+
+  public getCenter(optionalTarget: Vector3): Vector3 {
+    let result = optionalTarget || new Vector3();
+
+    return this.isEmpty() ?
+      result.set(0, 0, 0) :
+      result.addVectors(this.min, this.max).multiplyScalar(0.5);
+  }
+
   public clone() {
     return (new Box3()).copy(this);
   }
