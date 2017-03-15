@@ -70,6 +70,14 @@ export class Vector3 {
     return this;
   }
 
+  public subVectors(a: Vector3, b: Vector3): Vector3 {
+    this.x = a.x - b.x;
+    this.y = a.y - b.y;
+    this.z = a.z - b.z;
+
+    return this;
+  }
+
   public multiply(v: Vector3): Vector3 {
     this.x *= v.x;
     this.y *= v.y;
