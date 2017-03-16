@@ -70,7 +70,7 @@ export class Ray {
     return v.distanceToSquared(p);
   }
 
-  public distanceToPlane(p: Plane): number {
+  public distanceToPlane(p: Plane): number | null {
     let denominator = p.normal.dot(this.direction);
 
     if (denominator === 0) {
@@ -85,7 +85,7 @@ export class Ray {
     return t >= 0 ? t : null;
   }
 
-  public intersectSphere(s: Sphere, optionalTarget: Vector3): Vector3 {
+  public intersectSphere(s: Sphere, optionalTarget: Vector3): Vector3 | null {
     let v = new Vector3();
     v.subVectors(s.center, this.origin);
     let tca = v.dot(this.direction);
@@ -114,7 +114,7 @@ export class Ray {
     return this.at(t0, optionalTarget);
   }
 
-  public intersectPlane(p: Plane, optionalTarget: Vector3): Vector3 {
+  public intersectPlane(p: Plane, optionalTarget: Vector3): Vector3 | null {
     let t = this.distanceToPlane(p);
     if (t === null) {
       return null;
@@ -122,7 +122,7 @@ export class Ray {
     return this.at(t, optionalTarget);
   }
 
-  public intersectBox(box: Box3, optionalTarget: Vector3): Vector3 {
+  public intersectBox(box: Box3, optionalTarget: Vector3): Vector3 | null {
     let tmin, tmax, tymin, tymax, tzmin, tzmax;
 
     let invdirx = 1 / this.direction.x,
