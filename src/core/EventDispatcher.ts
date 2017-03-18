@@ -1,7 +1,3 @@
-/**
- *
- */
-
 export class EventDispatcher {
 
   private _listeners = {};

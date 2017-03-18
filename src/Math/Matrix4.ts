@@ -29,6 +29,12 @@ export class Matrix4 {
     return this;
   }
 
+  public copy(m: Matrix4): Matrix4 {
+    this.elements.set(m.elements);
+
+    return this;
+  }
+
   public multiply(m: Matrix4): Matrix4 {
     return this.multiplyMatrix(this, m);
   }
@@ -258,6 +264,14 @@ export class Matrix4 {
     );
   }
 
+  public compose(p: Vector3, q: Quaternion, s: Vector3): Matrix4 {
+    this.makeRotationFromQuaternion(q);
+    this.scale(s);
+    this.setPosition(p);
+
+    return this;
+  }
+
   public decompose(
     position: Vector3,
     quaternion: Quaternion,
@@ -306,6 +320,135 @@ export class Matrix4 {
     scale.x = sx;
     scale.y = sy;
     scale.z = sz;
+
+    return this;
+  }
+
+  public identity() {
+    this.set(
+
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+
+    );
+
+    return this;
+  }
+
+  public getInverse(m: Matrix4, throwOnDegenerate: boolean = true) {
+    // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+    let te = this.elements,
+      me = m.elements,
+
+      n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3],
+      n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7],
+      n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11],
+      n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15],
+
+      t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44,
+      t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44,
+      t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44,
+      t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+
+    let det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+
+    if (det === 0) {
+
+      let msg = 'Matrix4.getInverse(): can\'t invert matrix, determinant is 0';
+
+      if (throwOnDegenerate === true) {
+
+        throw new Error(msg);
+
+      } else {
+
+        console.warn(msg);
+
+      }
+
+      return this.identity();
+
+    }
+
+    let detInv = 1 / det;
+
+    te[0] = t11 * detInv;
+    te[1] = (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
+    te[2] = (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
+    te[3] = (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
+
+    te[4] = t12 * detInv;
+    te[5] = (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
+    te[6] = (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
+    te[7] = (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
+
+    te[8] = t13 * detInv;
+    te[9] = (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
+    te[10] = (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
+    te[11] = (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
+
+    te[12] = t14 * detInv;
+    te[13] = (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
+    te[14] = (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
+    te[15] = (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
+
+    return this;
+  }
+
+  public scale(v: Vector3): Matrix4 {
+    let te = this.elements;
+    let x = v.x, y = v.y, z = v.z;
+
+    te[0] *= x; te[4] *= y; te[8] *= z;
+    te[1] *= x; te[5] *= y; te[9] *= z;
+    te[2] *= x; te[6] *= y; te[10] *= z;
+    te[3] *= x; te[7] *= y; te[11] *= z;
+
+    return this;
+  }
+
+  public setPosition(v: Vector3): Matrix4 {
+    let te = this.elements;
+
+    te[12] = v.x;
+    te[13] = v.y;
+    te[14] = v.z;
+
+    return this;
+  }
+
+  public lookAt(eye: Vector3, target: Vector3, up: Vector3) {
+    let x = new Vector3();
+    let y = new Vector3();
+    let z = new Vector3();
+
+    let te = this.elements;
+
+    z.subVectors(eye, target).normalize();
+
+    if (z.lengthSq() === 0) {
+
+      z.z = 1;
+
+    }
+
+    x.crossVectors(up, z).normalize();
+
+    if (x.lengthSq() === 0) {
+
+      z.z += 0.0001;
+      x.crossVectors(up, z).normalize();
+
+    }
+
+    y.crossVectors(z, x);
+
+
+    te[0] = x.x; te[4] = y.x; te[8] = z.x;
+    te[1] = x.y; te[5] = y.y; te[9] = z.y;
+    te[2] = x.z; te[6] = y.z; te[10] = z.z;
 
     return this;
   }

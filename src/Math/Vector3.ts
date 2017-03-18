@@ -1,5 +1,8 @@
-'use strict';
 import { MathTool } from './MathTool';
+import { Euler } from './Euler';
+import { Quaternion } from './Quaternion';
+import { Matrix3 } from './Matrix3';
+import { Matrix4 } from './Matrix4';
 
 export class Vector3 {
   public x: number;
@@ -18,6 +21,14 @@ export class Vector3 {
     this.z = z;
 
     return this;
+  }
+
+  public setFromMatrixPosition(m: Matrix4): Vector3 {
+    return this.setFromMatrixColumn(m, 3);
+  }
+
+  public setFromMatrixColumn(m: Matrix4, index: number): Vector3 {
+    return this.fromArray(m.elements, index * 4);
   }
 
   public setScalar(s: number) {
@@ -159,6 +170,17 @@ export class Vector3 {
     return this;
   }
 
+  public crossVectors(a: Vector3, b: Vector3): Vector3 {
+    let ax = a.x, ay = a.y, az = a.z;
+    let bx = b.x, by = b.y, bz = b.z;
+
+    this.x = ay * bz - az * by;
+    this.y = az * bx - ax * bz;
+    this.z = ax * by - ay * bx;
+
+    return this;
+  }
+
   public negete(): Vector3 {
     this.x = -this.x;
     this.y = -this.y;
@@ -221,6 +243,62 @@ export class Vector3 {
     this.x = Math.max(this.x, v.x);
     this.y = Math.max(this.y, v.y);
     this.z = Math.max(this.z, v.z);
+
+    return this;
+  }
+
+  public applyEuler(euler: Euler): Vector3 {
+    let q = new Quaternion();
+    return this.applyQuaternion(q.setFromEuler(euler));
+  }
+
+  public applyQuaternion(q: Quaternion): Vector3 {
+    let x = this.x, y = this.y, z = this.z;
+    let qx = q.x, qy = q.y, qz = q.z, qw = q.w;
+
+    // calculate quat * vector
+
+    let ix = qw * x + qy * z - qz * y;
+    let iy = qw * y + qz * x - qx * z;
+    let iz = qw * z + qx * y - qy * x;
+    let iw = - qx * x - qy * y - qz * z;
+
+    // calculate result * inverse quat
+
+    this.x = ix * qw + iw * - qx + iy * - qz - iz * - qy;
+    this.y = iy * qw + iw * - qy + iz * - qx - ix * - qz;
+    this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx;
+
+    return this;
+  }
+
+  public applyMatrix3(m: Matrix3): Vector3 {
+    let x = this.x, y = this.y, z = this.z;
+    let e = m.elements;
+
+    this.x = e[0] * x + e[3] * y + e[6] * z;
+    this.y = e[1] * x + e[4] * y + e[7] * z;
+    this.z = e[2] * x + e[5] * y + e[8] * z;
+
+    return this;
+  }
+
+  public applyMatrix4(m: Matrix4): Vector3 {
+    let x = this.x, y = this.y, z = this.z;
+    let e = m.elements;
+
+    this.x = e[0] * x + e[4] * y + e[8] * z + e[12];
+    this.y = e[1] * x + e[5] * y + e[9] * z + e[13];
+    this.z = e[2] * x + e[6] * y + e[10] * z + e[14];
+    let w = e[3] * x + e[7] * y + e[11] * z + e[15];
+
+    return this.divideScalar(w);
+  }
+
+  public fromArray(array: Float32Array, offset: number = 0): Vector3 {
+    this.x = array[offset];
+    this.y = array[offset + 1];
+    this.z = array[offset + 2];
 
     return this;
   }

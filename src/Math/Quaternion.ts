@@ -185,6 +185,23 @@ export class Quaternion {
     return this;
   }
 
+  public setFromAxisAngle(axis: Vector3, angle: number): Quaternion {
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
+
+    // assumes axis is normalized
+
+    let halfAngle = angle / 2, s = Math.sin(halfAngle);
+
+    this._x = axis.x * s;
+    this._y = axis.y * s;
+    this._z = axis.z * s;
+    this._w = Math.cos(halfAngle);
+
+    this.onChangeCallback();
+
+    return this;
+  }
+
   public inverse() {
     return this.conjugate().normalize();
   }
