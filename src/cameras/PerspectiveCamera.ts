@@ -84,7 +84,7 @@ export class PerspectiveCamera extends Camera {
 
     }
 
-    var skew = this.filmOffset;
+    let skew = this.filmOffset;
     if (skew !== 0) {
       left += near * skew / this.getFilmWidth();
     }
