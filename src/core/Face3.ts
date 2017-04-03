@@ -14,6 +14,10 @@ export class Face3 {
 
   public materialIndex: number;
 
+  public __originalFaceNormal: Vector3 = null;
+  public __originalVertexNormals: Array<Vector3> = null;
+  public _id: number =  null;
+
   constructor(
     a?: number, b?: number, c?: number,
     normal?: Vector3 | Array<Vector3>,

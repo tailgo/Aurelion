@@ -36,7 +36,7 @@ export class Box3 {
     return this;
   }
 
-  public getCenter(optionalTarget: Vector3): Vector3 {
+  public getCenter(optionalTarget?: Vector3): Vector3 {
     let result = optionalTarget || new Vector3();
 
     return this.isEmpty() ?

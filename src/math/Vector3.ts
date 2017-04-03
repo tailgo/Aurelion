@@ -181,7 +181,7 @@ export class Vector3 {
     return this;
   }
 
-  public negete(): Vector3 {
+  public negate(): Vector3 {
     this.x = -this.x;
     this.y = -this.y;
     this.z = -this.z;

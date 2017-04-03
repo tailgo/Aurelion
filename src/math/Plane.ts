@@ -43,7 +43,7 @@ export class Plane {
 
   public negate(): Plane {
     this.constant *= -1;
-    this.normal.negete();
+    this.normal.negate();
 
     return this;
   }
