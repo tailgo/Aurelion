@@ -6,8 +6,21 @@ export class Color {
   public g: number = 1;
   public b: number = 1;
 
-  constructor(r: number, g: number, b: number) {
-    return this.setRGB(r, g, b);
+  constructor(r: number | Color, g?: number, b?: number) {
+
+    if (r instanceof Color) {
+      return this.set(r);
+    } else {
+      return this.setRGB(r, g, b);
+    }
+
+  }
+
+  public set(value: Color): Color {
+
+    this.copy(value);
+
+    return this;
   }
 
   public setRGB(r: number, g: number, b: number): Color {
