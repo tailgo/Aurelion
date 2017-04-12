@@ -29,7 +29,7 @@ export class BufferAttribute {
 
   public version: number;
 
-  constructor(array, itemSize: number, normalized: boolean) {
+  constructor(array, itemSize: number, normalized?: boolean) {
     this.uuid = MathTool.generateUUID();
 
     this.array = array;
@@ -73,4 +73,76 @@ export class BufferAttribute {
 
     return this;
   }
+}
+
+export class Int8BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Int8Array(array), itemSize);
+  }
+
+}
+
+export class Uint8BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Uint8Array(array), itemSize);
+  }
+
+}
+
+export class Uint8ClampedBufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Uint8ClampedArray(array), itemSize);
+  }
+
+}
+
+export class Int16BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Int16Array(array), itemSize);
+  }
+
+}
+
+export class Uint16BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Uint16Array(array), itemSize);
+  }
+
+}
+
+export class Int32BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Int32Array(array), itemSize);
+  }
+
+}
+
+export class Uint32BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Uint32Array(array), itemSize);
+  }
+
+}
+
+export class Float32BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Float32Array(array), itemSize);
+  }
+
+}
+
+export class Float64BufferAttribute extends BufferAttribute {
+
+  constructor(array, itemSize) {
+    super(new Float64Array(array), itemSize);
+  }
+
 }
