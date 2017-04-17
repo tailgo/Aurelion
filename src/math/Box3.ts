@@ -29,6 +29,37 @@ export class Box3 {
     return this;
   }
 
+  public setFromBufferAttribute(attribute) {
+    let minX = + Infinity;
+    let minY = + Infinity;
+    let minZ = + Infinity;
+
+    let maxX = - Infinity;
+    let maxY = - Infinity;
+    let maxZ = - Infinity;
+
+    for (let i = 0, l = attribute.count; i < l; i++) {
+
+      let x = attribute.getX(i);
+      let y = attribute.getY(i);
+      let z = attribute.getZ(i);
+
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (z < minZ) minZ = z;
+
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+      if (z > maxZ) maxZ = z;
+
+    }
+
+    this.min.set(minX, minY, minZ);
+    this.max.set(maxX, maxY, maxZ);
+
+    return this;
+  }
+
   public expandByPoint(point: Vector3): Box3 {
     this.min.min(point);
     this.max.max(point);
