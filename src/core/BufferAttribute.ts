@@ -73,6 +73,126 @@ export class BufferAttribute {
 
     return this;
   }
+
+  public copyAt(index1, attribute, index2) {
+    index1 *= this.itemSize;
+    index2 *= attribute.itemSize;
+    for (let i = 0, l = this.itemSize; i < l; i++) {
+      this.array[index1 + i] = attribute.array[index2 + i];
+    }
+    return this;
+  }
+
+  public copyArray(array) {
+    this.array.set(array);
+    return this;
+  }
+
+  public copyColorsArray(colors) {
+    let array = this.array, offset = 0;
+
+    for (let i = 0, l = colors.length; i < l; i++) {
+      let color = colors[i];
+
+      array[offset++] = color.r;
+      array[offset++] = color.g;
+      array[offset++] = color.b;
+    }
+    return this;
+  }
+
+  public copyIndicesArray(indices) {
+    let array = this.array, offset = 0;
+
+    for (let i = 0, l = indices.length; i < l; i++) {
+      let index = indices[i];
+
+      array[offset++] = index.a;
+      array[offset++] = index.b;
+      array[offset++] = index.c;
+    }
+    return this;
+  }
+
+  public copyVector2sArray(vectors) {
+    let array = this.array, offset = 0;
+
+    for (let i = 0, l = vectors.length; i < l; i++) {
+      let vector = vectors[i];
+
+      array[offset++] = vector.x;
+      array[offset++] = vector.y;
+    }
+    return this;
+  }
+
+  public copyVector3sArray(vectors) {
+    let array = this.array, offset = 0;
+
+    for (let i = 0, l = vectors.length; i < l; i++) {
+      let vector = vectors[i];
+
+      array[offset++] = vector.x;
+      array[offset++] = vector.y;
+      array[offset++] = vector.z;
+    }
+    return this;
+  }
+
+  public copyVector4sArray(vectors) {
+    let array = this.array, offset = 0;
+
+    for (let i = 0, l = vectors.length; i < l; i++) {
+      let vector = vectors[i];
+
+      array[offset++] = vector.x;
+      array[offset++] = vector.y;
+      array[offset++] = vector.z;
+      array[offset++] = vector.w;
+    }
+    return this;
+  }
+
+  public set(value, offset = 0) {
+    this.array.set(value, offset);
+    return this;
+  }
+
+  public getX(index) {
+    return this.array[index * this.itemSize];
+  }
+
+  public setX(index, x) {
+    this.array[index * this.itemSize] = x;
+    return this;
+  }
+
+  public getY(index) {
+    return this.array[index * this.itemSize + 1];
+  }
+
+  public setY(index, y) {
+    this.array[index * this.itemSize + 1] = y;
+    return this;
+  }
+
+  public getZ(index) {
+    return this.array[index * this.itemSize + 2];
+  }
+
+  public setZ(index, z) {
+    this.array[index * this.itemSize + 2] = z;
+    return this;
+  }
+
+  public getW(index) {
+    return this.array[index * this.itemSize + 3];
+  }
+
+  public setW(index, w) {
+    this.array[index * this.itemSize + 3] = w;
+    return this;
+  }
 }
 
 export class Int8BufferAttribute extends BufferAttribute {
