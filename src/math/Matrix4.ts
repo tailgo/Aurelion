@@ -541,4 +541,21 @@ export class Matrix4 {
 
     return this;
   }
+
+  public applyToBufferAttribute(attribute) {
+    let v1 = new Vector3();
+    for (let i = 0, l = attribute.count; i < l; i++) {
+
+      v1.x = attribute.getX(i);
+      v1.y = attribute.getY(i);
+      v1.z = attribute.getZ(i);
+
+      v1.applyMatrix4(this);
+
+      attribute.setXYZ(i, v1.x, v1.y, v1.z);
+
+    }
+
+    return attribute;
+  }
 }

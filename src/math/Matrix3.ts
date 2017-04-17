@@ -1,3 +1,4 @@
+import { Vector3 } from './Vector3';
 import { Matrix4 } from './Matrix4';
 
 export class Matrix3 {
@@ -140,6 +141,23 @@ export class Matrix3 {
     te[8] = (n22 * n11 - n21 * n12) * detInv;
 
     return this;
+  }
+
+  public applyToBufferAttribute(attribute) {
+    let v1 = new Vector3();
+    for (let i = 0, l = attribute.count; i < l; i++) {
+
+      v1.x = attribute.getX(i);
+      v1.y = attribute.getY(i);
+      v1.z = attribute.getZ(i);
+
+      v1.applyMatrix3(this);
+
+      attribute.setXYZ(i, v1.x, v1.y, v1.z);
+
+    }
+
+    return attribute;
   }
 
 }
