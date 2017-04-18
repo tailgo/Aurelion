@@ -1,6 +1,7 @@
 import { EventDispatcher } from './EventDispatcher';
 import { Face3 } from './Face3';
 import { Object3D } from './Object3D';
+import { BufferGeometry } from './BufferGeometry';
 import { Sphere } from '../math/Sphere';
 import { Box3 } from '../math/Box3';
 import { Vector2 } from '../math/Vector2';
@@ -623,134 +624,100 @@ export class Geometry extends EventDispatcher {
     this.dispatchEvent({ type: 'dispose' });
   }
 
-  // public fromBufferGeometry(geometry: BufferGeometry): Geometry {
-  //   let scope = this;
+  public fromBufferGeometry(geometry: BufferGeometry): Geometry {
+    let scope = this;
 
-  //   let indices = geometry.index !== null ? geometry.index.array : undefined;
-  //   let attributes = geometry.attributes;
+    let indices = geometry.index !== null ? geometry.index.array : undefined;
+    let attributes = geometry.attributes;
 
-  //   let positions = attributes.position.array;
-  //   let normals = attributes.normal !== undefined ? attributes.normal.array : undefined;
-  //   let colors = attributes.color !== undefined ? attributes.color.array : undefined;
-  //   let uvs = attributes.uv !== undefined ? attributes.uv.array : undefined;
-  //   let uvs2 = attributes.uv2 !== undefined ? attributes.uv2.array : undefined;
+    let positions = attributes.position.array;
+    let normals = attributes.normal !== undefined ? attributes.normal.array : undefined;
+    let colors = attributes.color !== undefined ? attributes.color.array : undefined;
+    let uvs = attributes.uv !== undefined ? attributes.uv.array : undefined;
+    let uvs2 = attributes.uv2 !== undefined ? attributes.uv2.array : undefined;
 
-  //   if (uvs2 !== undefined) this.faceVertexUvs[1] = [];
+    if (uvs2 !== undefined) this.faceVertexUvs[1] = [];
 
-  //   let tempNormals = [];
-  //   let tempUVs = [];
-  //   let tempUVs2 = [];
+    let tempNormals = [];
+    let tempUVs = [];
+    let tempUVs2 = [];
 
-  //   for (let i = 0, j = 0; i < positions.length; i += 3, j += 2) {
+    for (let i = 0, j = 0; i < positions.length; i += 3, j += 2) {
+      scope.vertices.push(new Vector3(positions[i], positions[i + 1], positions[i + 2]));
 
-  //     scope.vertices.push(new Vector3(positions[i], positions[i + 1], positions[i + 2]));
+      if (normals !== undefined) {
+        tempNormals.push(new Vector3(normals[i], normals[i + 1], normals[i + 2]));
+      }
 
-  //     if (normals !== undefined) {
+      if (colors !== undefined) {
+        scope.colors.push(new Color(colors[i], colors[i + 1], colors[i + 2]));
+      }
 
-  //       tempNormals.push(new Vector3(normals[i], normals[i + 1], normals[i + 2]));
+      if (uvs !== undefined) {
+        tempUVs.push(new Vector2(uvs[j], uvs[j + 1]));
+      }
 
-  //     }
+      if (uvs2 !== undefined) {
+        tempUVs2.push(new Vector2(uvs2[j], uvs2[j + 1]));
+      }
+    }
 
-  //     if (colors !== undefined) {
+    function addFace(a, b, c, materialIndex?) {
 
-  //       scope.colors.push(new Color(colors[i], colors[i + 1], colors[i + 2]));
+      let vertexNormals = normals !== undefined ? [tempNormals[a].clone(), tempNormals[b].clone(), tempNormals[c].clone()] : [];
+      let vertexColors = colors !== undefined ? [scope.colors[a].clone(), scope.colors[b].clone(), scope.colors[c].clone()] : [];
 
-  //     }
+      let face = new Face3(a, b, c, vertexNormals, vertexColors, materialIndex);
 
-  //     if (uvs !== undefined) {
+      scope.faces.push(face);
 
-  //       tempUVs.push(new Vector2(uvs[j], uvs[j + 1]));
+      if (uvs !== undefined) {
+        scope.faceVertexUvs[0].push([tempUVs[a].clone(), tempUVs[b].clone(), tempUVs[c].clone()]);
+      }
 
-  //     }
+      if (uvs2 !== undefined) {
+        scope.faceVertexUvs[1].push([tempUVs2[a].clone(), tempUVs2[b].clone(), tempUVs2[c].clone()]);
+      }
 
-  //     if (uvs2 !== undefined) {
+    }
 
-  //       tempUVs2.push(new Vector2(uvs2[j], uvs2[j + 1]));
+    if (indices !== undefined) {
+      let groups = geometry.groups;
+      if (groups.length > 0) {
+        for (let i = 0; i < groups.length; i++) {
 
-  //     }
+          let group = groups[i];
 
-  //   }
+          let start = group.start;
+          let count = group.count;
 
-  //   function addFace(a, b, c, materialIndex) {
+          for (let j = start, jl = start + count; j < jl; j += 3) {
+            addFace(indices[j], indices[j + 1], indices[j + 2], group.materialIndex);
+          }
+        }
+      } else {
+        for (let i = 0; i < indices.length; i += 3) {
+          addFace(indices[i], indices[i + 1], indices[i + 2]);
+        }
+      }
+    } else {
+      for (let i = 0; i < positions.length / 3; i += 3) {
+        addFace(i, i + 1, i + 2);
+      }
+    }
 
-  //     let vertexNormals = normals !== undefined ? [tempNormals[a].clone(), tempNormals[b].clone(), tempNormals[c].clone()] : [];
-  //     let vertexColors = colors !== undefined ? [scope.colors[a].clone(), scope.colors[b].clone(), scope.colors[c].clone()] : [];
+    this.computeFaceNormals();
 
-  //     let face = new Face3(a, b, c, vertexNormals, vertexColors, materialIndex);
+    if (geometry.boundingBox !== null) {
+      this.boundingBox = geometry.boundingBox.clone();
+    }
 
-  //     scope.faces.push(face);
+    if (geometry.boundingSphere !== null) {
+      this.boundingSphere = geometry.boundingSphere.clone();
+    }
 
-  //     if (uvs !== undefined) {
-
-  //       scope.faceVertexUvs[0].push([tempUVs[a].clone(), tempUVs[b].clone(), tempUVs[c].clone()]);
-
-  //     }
-
-  //     if (uvs2 !== undefined) {
-
-  //       scope.faceVertexUvs[1].push([tempUVs2[a].clone(), tempUVs2[b].clone(), tempUVs2[c].clone()]);
-
-  //     }
-
-  //   }
-
-  //   if (indices !== undefined) {
-
-  //     let groups = geometry.groups;
-
-  //     if (groups.length > 0) {
-
-  //       for (let i = 0; i < groups.length; i++) {
-
-  //         let group = groups[i];
-
-  //         let start = group.start;
-  //         let count = group.count;
-
-  //         for (let j = start, jl = start + count; j < jl; j += 3) {
-
-  //           addFace(indices[j], indices[j + 1], indices[j + 2], group.materialIndex);
-
-  //         }
-
-  //       }
-
-  //     } else {
-
-  //       for (let i = 0; i < indices.length; i += 3) {
-
-  //         addFace(indices[i], indices[i + 1], indices[i + 2]);
-
-  //       }
-
-  //     }
-
-  //   } else {
-
-  //     for (let i = 0; i < positions.length / 3; i += 3) {
-
-  //       addFace(i, i + 1, i + 2);
-
-  //     }
-
-  //   }
-
-  //   this.computeFaceNormals();
-
-  //   if (geometry.boundingBox !== null) {
-
-  //     this.boundingBox = geometry.boundingBox.clone();
-
-  //   }
-
-  //   if (geometry.boundingSphere !== null) {
-
-  //     this.boundingSphere = geometry.boundingSphere.clone();
-
-  //   }
-
-  //   return this;
-  // }
+    return this;
+  }
 
   public lookAt(vector: Vector3): void {
     let obj = new Object3D();
