@@ -18,6 +18,21 @@ export class Plane {
     return this;
   }
 
+  public setFromNormalAndCoplanarPoint(normal: Vector3, point: Vector3): Plane {
+    this.normal.copy(normal);
+    this.constant = -point.dot(this.normal);
+    return this;
+  }
+
+  public setFromCoplanarPoints(a: Vector3, b: Vector3, c: Vector3): Plane {
+    let v1 = new Vector3();
+    let v2 = new Vector3();
+
+    let normal = v1.subVectors(c, b).cross(v2.subVectors(a, b)).normalize();
+    this.setFromNormalAndCoplanarPoint(normal, a);
+    return this;
+  }
+
   public clone(): Plane {
     return new Plane(this.normal, this.constant);
   }
@@ -52,6 +67,15 @@ export class Plane {
     return this.normal.dot(point) + this.constant;
   }
 
+  public projectPoint(point: Vector3, optionalTarget: Vector3) {
+    return this.orthoPoint(point, optionalTarget).sub(point).negate();
+  }
 
+  public orthoPoint(point: Vector3, ot: Vector3 = new Vector3()): Vector3 {
+    let perpendicularMagnitude = this.distanceToPoint(point);
+
+    let result = ot;
+    return result.copy(this.normal).multiplyScalar(perpendicularMagnitude);
+  }
 
 }
