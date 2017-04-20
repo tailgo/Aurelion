@@ -19,8 +19,8 @@ export class Object3D extends EventDispatcher {
   public frustumCulled: boolean;
   public visible: boolean;
 
-  public parent: Object3D;
-  public children: Array<Object3D>;
+  public parent;
+  public children;
 
   public layers: Layers;
 
