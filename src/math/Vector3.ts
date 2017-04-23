@@ -3,6 +3,7 @@ import { Euler } from './Euler';
 import { Quaternion } from './Quaternion';
 import { Matrix3 } from './Matrix3';
 import { Matrix4 } from './Matrix4';
+import { BufferAttribute } from '../core/BufferAttribute';
 
 export class Vector3 {
   public x: number;
@@ -60,6 +61,14 @@ export class Vector3 {
     this.x = a.x + b.x;
     this.y = a.y + b.y;
     this.z = a.z + b.z;
+
+    return this;
+  }
+
+  public addScaledVector(v: Vector3, s: number): Vector3 {
+    this.x += v.x * s;
+    this.y += v.y * s;
+    this.z += v.z * s;
 
     return this;
   }
@@ -299,6 +308,14 @@ export class Vector3 {
     this.x = array[offset];
     this.y = array[offset + 1];
     this.z = array[offset + 2];
+
+    return this;
+  }
+
+  public fromBufferAttribute(atb: BufferAttribute, index: number): Vector3 {
+    this.x = atb.getX(index);
+    this.y = atb.getY(index);
+    this.z = atb.getZ(index);
 
     return this;
   }

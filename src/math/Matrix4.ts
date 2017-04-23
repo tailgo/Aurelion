@@ -508,6 +508,16 @@ export class Matrix4 {
     return this;
   }
 
+  public getMaxScaleOnAxis(): number {
+    let te = this.elements;
+
+    let scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
+    let scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
+    let scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
+
+    return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
+  }
+
   public scale(v: Vector3): Matrix4 {
     let te = this.elements;
     let x = v.x, y = v.y, z = v.z;

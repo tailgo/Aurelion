@@ -1,5 +1,6 @@
 import { Box3 } from './Box3';
 import { Vector3 } from './Vector3';
+import { Matrix4 } from './Matrix4';
 
 export class Sphere {
 
@@ -76,6 +77,12 @@ export class Sphere {
 
   public translate(offset: Vector3): Sphere {
     this.center.add(offset);
+    return this;
+  }
+
+  public applyMatrix4(matrix: Matrix4): Sphere {
+    this.center.applyMatrix4(matrix);
+    this.radius = this.radius * matrix.getMaxScaleOnAxis();
 
     return this;
   }

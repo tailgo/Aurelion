@@ -1,4 +1,5 @@
-'use strict';
+import { BufferAttribute } from '../core/BufferAttribute';
+
 export class Vector2 {
   public x: number;
   public y: number;
@@ -238,4 +239,10 @@ export class Vector2 {
     return this;
   }
 
+  public fromBufferAttribute(atb: BufferAttribute, index: number): Vector2 {
+    this.x = atb.getX(index);
+    this.y = atb.getY(index);
+
+    return this;
+  }
 }

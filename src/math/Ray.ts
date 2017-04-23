@@ -1,4 +1,5 @@
 import { Vector3 } from './Vector3';
+import { Matrix4 } from './Matrix4';
 import { Sphere } from './Sphere';
 import { Plane } from './Plane';
 import { Box3 } from './Box3';
@@ -85,7 +86,19 @@ export class Ray {
     return t >= 0 ? t : null;
   }
 
-  public intersectSphere(s: Sphere, optionalTarget: Vector3): Vector3 | null {
+  public applyMatrix4(matrix: Matrix4): Ray {
+    this.direction.add(this.origin).applyMatrix4(matrix);
+    this.origin.applyMatrix4(matrix);
+    this.direction.sub(this.origin);
+    this.direction.normalize();
+
+    return this;
+  }
+
+  /**
+   * intersect
+   */
+  public intersectSphere(s: Sphere, optionalTarget: Vector3): Vector3 {
     let v = new Vector3();
     v.subVectors(s.center, this.origin);
     let tca = v.dot(this.direction);
@@ -114,7 +127,7 @@ export class Ray {
     return this.at(t0, optionalTarget);
   }
 
-  public intersectPlane(p: Plane, optionalTarget: Vector3): Vector3 | null {
+  public intersectPlane(p: Plane, optionalTarget: Vector3): Vector3 {
     let t = this.distanceToPlane(p);
     if (t === null) {
       return null;
@@ -122,7 +135,7 @@ export class Ray {
     return this.at(t, optionalTarget);
   }
 
-  public intersectBox(box: Box3, optionalTarget: Vector3): Vector3 | null {
+  public intersectBox(box: Box3, optionalTarget: Vector3): Vector3 {
     let tmin, tmax, tymin, tymax, tzmin, tzmax;
 
     let invdirx = 1 / this.direction.x,
@@ -191,6 +204,72 @@ export class Ray {
     return this.at(tmin >= 0 ? tmin : tmax, optionalTarget);
   }
 
+  public intersectTriangle(
+    a: Vector3, b: Vector3, c: Vector3,
+    backfaceCulling: boolean,
+    optionalTarget: Vector3 = new Vector3()
+  ): Vector3 {
+    let diff = new Vector3();
+    let edge1 = new Vector3();
+    let edge2 = new Vector3();
+    let normal = new Vector3();
+
+    // from http://www.geometrictools.com/GTEngine/Include/Mathematics/GteIntrRay3Triangle3.h
+    edge1.subVectors(b, a);
+    edge2.subVectors(c, a);
+    normal.crossVectors(edge1, edge2);
+
+    // Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
+    // E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by
+    //   |Dot(D,N)|*b1 = sign(Dot(D,N))*Dot(D,Cross(Q,E2))
+    //   |Dot(D,N)|*b2 = sign(Dot(D,N))*Dot(D,Cross(E1,Q))
+    //   |Dot(D,N)|*t = -sign(Dot(D,N))*Dot(Q,N)
+    let DdN = this.direction.dot(normal);
+    let sign;
+
+    if (DdN > 0) {
+      if (backfaceCulling) return null;
+      sign = 1;
+    } else if (DdN < 0) {
+      sign = - 1;
+      DdN = - DdN;
+    } else {
+      return null;
+    }
+
+    diff.subVectors(this.origin, a);
+    let DdQxE2 = sign * this.direction.dot(edge2.crossVectors(diff, edge2));
+    // b1 < 0, no intersection
+    if (DdQxE2 < 0) {
+      return null;
+    }
+
+    let DdE1xQ = sign * this.direction.dot(edge1.cross(diff));
+    // b2 < 0, no intersection
+    if (DdE1xQ < 0) {
+      return null;
+    }
+
+    // b1+b2 > 1, no intersection
+    if (DdQxE2 + DdE1xQ > DdN) {
+      return null;
+    }
+
+    // Line intersects triangle, check if ray does.
+    let QdN = - sign * diff.dot(normal);
+
+    // t < 0, no intersection
+    if (QdN < 0) {
+      return null;
+    }
+
+    // Ray intersects triangle.
+    return this.at(QdN / DdN, optionalTarget);
+  }
+
+  /**
+   * intersects
+   */
   public intersectsSphere(s: Sphere): boolean {
     return this.distanceToPoint(s.center) <= s.radius;
   }
