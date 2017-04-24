@@ -33,6 +33,13 @@ export class Plane {
     return this;
   }
 
+  public setComponents(x: number, y: number, z: number, w: number): Plane {
+    this.normal.set(x, y, z);
+    this.constant = w;
+
+    return this;
+  }
+
   public clone(): Plane {
     return new Plane(this.normal, this.constant);
   }
