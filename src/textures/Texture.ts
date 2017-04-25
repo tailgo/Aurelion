@@ -1,7 +1,9 @@
 import { EventDispatcher } from '../core/EventDispatcher';
-import { UVMapping, MirroredRepeatWrapping, ClampToEdgeWrapping, RepeatWrapping,
-   LinearEncoding, UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter,
-   LinearFilter } from '../Constants';
+import {
+  UVMapping, MirroredRepeatWrapping, ClampToEdgeWrapping, RepeatWrapping,
+  LinearEncoding, UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter,
+  LinearFilter
+} from '../Constants';
 import { MathTool } from '../math/MathTool';
 import { Vector2 } from '../math/Vector2';
 
@@ -57,7 +59,8 @@ export class Texture extends EventDispatcher {
     magFilter: number = LinearFilter,
     minFilter: number = LinearMipMapLinearFilter,
     format: number = RGBAFormat, type: number = UnsignedByteType,
-    anisotropy: number = 1, encoding: number = LinearEncoding) {
+    anisotropy: number = 1, encoding: number = LinearEncoding
+  ) {
     super();
 
     this.id = textureId++;
