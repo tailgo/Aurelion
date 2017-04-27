@@ -6,7 +6,7 @@ export class Color {
   public g: number = 1;
   public b: number = 1;
 
-  constructor(r: number | Color, g?: number, b?: number) {
+  constructor(r?: number | Color, g?: number, b?: number) {
 
     if (r instanceof Color) {
       return this.set(r);

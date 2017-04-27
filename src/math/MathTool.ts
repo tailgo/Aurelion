@@ -110,6 +110,14 @@ const MathTool = {
 
   rad2deg(r: number): number {
     return r * this.RAD2DEG;
+  },
+
+  isPowerOfTwo(value: number): boolean {
+    return ( value & ( value - 1 ) ) === 0 && value !== 0;
+  },
+
+  nearestPowerOfTwo(value: number): number {
+    return Math.pow(2, Math.round(Math.log(value) / Math.LN2));
   }
 };
 
