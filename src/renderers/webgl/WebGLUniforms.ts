@@ -5,8 +5,8 @@ let emptyTexture = new Texture();
 let emptyCubeTexture = new CubeTexture();
 
 class UniformContainer {
-  public seq;
-  public map;
+  public seq = [];
+  public map = {};
 }
 
 class SingleUniform {

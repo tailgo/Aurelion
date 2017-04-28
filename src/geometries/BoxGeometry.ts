@@ -47,7 +47,8 @@ export class BoxBufferGeometry extends BufferGeometry {
   public parameters: GeometryParameters;
 
   constructor(width: number, height: number, depth: number,
-  widthSegments: number, heightSegments: number, depthSegments: number
+  widthSegments: number = 1, heightSegments: number = 1,
+  depthSegments: number = 1
   ) {
     super();
 

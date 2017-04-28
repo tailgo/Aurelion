@@ -336,16 +336,16 @@ export class WebGLState {
      * support function
      */
     function enable(id) {
-      if (this.capabilities[id] !== true) {
+      if (capabilities[id] !== true) {
         gl.enable(id);
-        this.capabilities[id] = true;
+        capabilities[id] = true;
       }
     }
 
     function disable(id) {
-      if (this.capabilities[id] !== false) {
+      if (capabilities[id] !== false) {
         gl.disable(id);
-        this.capabilities[id] = false;
+        capabilities[id] = false;
       }
     }
 
@@ -694,6 +694,8 @@ export class WebGLState {
       depth: depthBuffer,
       stencil: stencilBuffer
     };
+
+    this.capabilities = capabilities;
 
     this.init = init;
     this.initAttributes = initAttributes;

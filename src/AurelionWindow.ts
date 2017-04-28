@@ -19,6 +19,7 @@ class AurelionWindow {
     }
 
     this._electronApp = electron.app;
+    this._electronApp.commandLine.appendSwitch('ignore-gpu-blacklist');
   }
 
   public init(config: string = 'aurelion.json') {
@@ -47,7 +48,11 @@ class AurelionWindow {
   private _createWindow() {
     this._electronWindow = new electron.BrowserWindow({
       width: 800,
-      height: 600
+      height: 600,
+      webPreferences: {
+        webSecurity: false,
+        webgl: true
+      }
     });
 
     this._electronWindow.loadURL(url.format({

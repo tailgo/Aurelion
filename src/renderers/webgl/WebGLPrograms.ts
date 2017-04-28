@@ -167,10 +167,11 @@ export class WebGLPrograms {
         numClippingPlanes: nClipPlanes,
         numClipIntersection: nClipIntersection,
 
-        shadowMapEnabled: renderer.shadowMap.enabled && object.receiveShadow && lights.shadows.length > 0,
-        shadowMapType: renderer.shadowMap.type,
+        // shadowMapEnabled: renderer.shadowMap.enabled && object.receiveShadow && lights.shadows.length > 0,
+        shadowMapEnabled: false,
+        shadowMapType: 1, // renderer.shadowMap.type,
 
-        toneMapping: renderer.toneMapping,
+        toneMapping: 1, // renderer.toneMapping,
         physicallyCorrectLights: renderer.physicallyCorrectLights,
 
         premultipliedAlpha: material.premultipliedAlpha,

@@ -4,10 +4,10 @@ export { Scene } from './scenes/Scene';
 
 export { TextureLoader } from './loaders/TextureLoader';
 
-// export { BoxBufferGeometry } from './'
+export { BoxBufferGeometry } from './geometries/BoxGeometry';
 
-// export { MeshBasicMaterial } from ''
+export { MeshBasicMaterial } from './materials/MeshBasicMaterial';
 
-// export { Mesh } from './';
+export { Mesh } from './objects/Mesh';
 
 export { WebGLRenderer } from './renderers/WebGLRenderer';
