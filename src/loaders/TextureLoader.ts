@@ -6,6 +6,7 @@ import { LoadingManager, DefaultLoadingManager } from './LoadingManager';
 export class TextureLoader {
   public manager: LoadingManager;
   public path: string;
+  public crossOrigin;
 
   constructor(manager: LoadingManager = DefaultLoadingManager) {
     this.manager = manager;
@@ -20,6 +21,7 @@ export class TextureLoader {
     let texture = new Texture();
 
     let loader = new ImageLoader(this.manager);
+    loader.setCrossOrigin(this.crossOrigin);
     loader.setPath(this.path);
     loader.load(url, (image) => {
       let isJPEG = url.search(/\.(jpg|jpeg)$/) > 0
@@ -35,6 +37,11 @@ export class TextureLoader {
     }, onProgress, onError);
 
     return texture;
+  }
+
+  public setCrossOrigin(value) {
+    this.crossOrigin = value;
+    return this;
   }
 
   public setPath(value: string): TextureLoader {

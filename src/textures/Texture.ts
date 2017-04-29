@@ -70,6 +70,8 @@ export class Texture extends EventDispatcher {
     this.image = image;
     this.mipmaps = [];
 
+    this.mapping = mapping;
+
     this.wrapS = wrapS;
     this.wrapT = wrapT;
 

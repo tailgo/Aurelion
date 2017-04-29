@@ -131,7 +131,7 @@ export class Object3D extends EventDispatcher {
 
       this.children.push(object);
     } else {
-      console.error('THREE.Object3D.add: object not an instance of THREE.Object3D.', object);
+      console.error('Object3D.add: object not an instance of Object3D.', object);
     }
 
     return this;

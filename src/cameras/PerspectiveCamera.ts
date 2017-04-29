@@ -73,7 +73,6 @@ export class PerspectiveCamera extends Camera {
     let view = this.view;
 
     if (view !== null) {
-
       let fullWidth = view.fullWidth;
       let fullHeight = view.fullHeight;
 
@@ -81,7 +80,6 @@ export class PerspectiveCamera extends Camera {
       top -= view.offsetY * height / fullHeight;
       width *= view.width / fullWidth;
       height *= view.height / fullHeight;
-
     }
 
     let skew = this.filmOffset;

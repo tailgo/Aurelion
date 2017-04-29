@@ -8,17 +8,23 @@ export class Color {
 
   constructor(r?: number | Color, g?: number, b?: number) {
 
-    if (r instanceof Color) {
+    if (g === undefined && b === undefined) {
       return this.set(r);
     } else {
-      return this.setRGB(r, g, b);
+      if (!(r instanceof Color)) {
+        return this.setRGB(r, g, b);
+      }
     }
 
   }
 
-  public set(value: Color): Color {
+  public set(value?: number | Color): Color {
 
-    this.copy(value);
+    if (value && value instanceof Color) {
+      this.copy(value);
+    } else if (typeof value === 'number') {
+      this.setHex(value);
+    }
 
     return this;
   }
@@ -27,6 +33,15 @@ export class Color {
     this.r = r;
     this.g = g;
     this.b = b;
+
+    return this;
+  }
+
+  public setHex(hex: number): Color {
+    hex = Math.floor(hex);
+    this.r = (hex >> 16 & 255) / 255;
+    this.g = (hex >> 8 & 255) / 255;
+    this.b = (hex & 255) / 255;
 
     return this;
   }

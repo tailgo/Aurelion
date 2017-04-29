@@ -8,6 +8,7 @@ export class ImageLoader {
   public manager: LoadingManager;
 
   public path: string; // base path from the file
+  public crossOrigin;
 
   constructor(manager: LoadingManager = DefaultLoadingManager) {
     this.manager = manager;
@@ -65,6 +66,11 @@ export class ImageLoader {
 
   public setPath(value: string): ImageLoader {
     this.path = value;
+    return this;
+  }
+
+  public setCrossOrigin(value) {
+    this.crossOrigin = value;
     return this;
   }
 }

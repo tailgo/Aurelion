@@ -203,7 +203,7 @@ export class Material extends EventDispatcher {
       let newValue = values[key];
 
       if (newValue === undefined) {
-        console.warn('THREE.Material: "' + key + '" parameter is undefined.');
+        console.warn('AL.Material: "' + key + '" parameter is undefined.');
         continue;
       }
 

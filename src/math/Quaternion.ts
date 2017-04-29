@@ -11,7 +11,7 @@ export class Quaternion {
 
   public onChangeCallback: Function;
 
-  constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 0) {
+  constructor(x: number = 0, y: number = 0, z: number = 0, w: number = 1) {
     this._x = x;
     this._y = y;
     this._z = z;
