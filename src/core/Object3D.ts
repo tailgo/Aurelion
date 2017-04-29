@@ -55,7 +55,7 @@ export class Object3D extends EventDispatcher {
 
   constructor() {
     super();
-    this.id = object3dId++;
+    this.id = ++object3dId;
     this.uuid = MathTool.generateUUID();
 
     this.name = '';

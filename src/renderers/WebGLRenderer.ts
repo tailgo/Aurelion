@@ -414,6 +414,10 @@ export class WebGLRenderer {
   public clippingPlanes;
   public localClippingEnabled: boolean;
 
+  public gammaFactor: number;
+  public gammaInput: boolean;
+  public gammaOutput: boolean;
+
   private maxMorphTargets: number;
   private maxMorphNormals: number;
 
@@ -544,6 +548,10 @@ export class WebGLRenderer {
     this.autoClearStencil = true;
 
     this.sortObjects = true;
+
+    this.gammaFactor = 2.0;
+    this.gammaInput = false;
+    this.gammaOutput = false;
 
     this.clippingPlanes = [];
     this.localClippingEnabled = false;

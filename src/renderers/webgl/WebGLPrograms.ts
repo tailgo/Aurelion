@@ -172,7 +172,7 @@ export class WebGLPrograms {
         shadowMapType: 1, // renderer.shadowMap.type,
 
         toneMapping: 1, // renderer.toneMapping,
-        physicallyCorrectLights: renderer.physicallyCorrectLights,
+        physicallyCorrectLights: false, // renderer.physicallyCorrectLights,
 
         premultipliedAlpha: material.premultipliedAlpha,
 
