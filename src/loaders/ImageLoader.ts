@@ -44,7 +44,7 @@ export class ImageLoader {
       Cache.add(url, this);
 
       if (onLoad) {
-        onLoad(this);
+        onLoad(image);
       }
 
       this.manager.itemEnd(url);
@@ -57,6 +57,10 @@ export class ImageLoader {
 
       this.manager.itemError(url);
     }, false);
+
+    if (this.crossOrigin !== undefined) {
+      image.crossOrigin = this.crossOrigin;
+    }
 
     this.manager.itemStart(url);
     image.src = url;

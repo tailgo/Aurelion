@@ -50,7 +50,7 @@ export class Texture extends EventDispatcher {
   public version: number;
 
   public onUpdate: Function;
-  public needsUpdate: boolean;
+  public _needsUpdate: boolean;
 
   constructor(
     image: HTMLImageElement | Array<HTMLImageElement> = Texture.DEFAULT_IMAGE,
@@ -97,6 +97,15 @@ export class Texture extends EventDispatcher {
     this.onUpdate = null;
   }
 
+  set needsUpdate(value) {
+    this._needsUpdate = value;
+    if (value === true) this.version++;
+  }
+
+  get needsUpdate() {
+    return this._needsUpdate;
+  }
+
   public clone(): Texture {
     return (new Texture()).copy(this);
   }
@@ -141,52 +150,37 @@ export class Texture extends EventDispatcher {
     uv.add(this.offset);
 
     if (uv.x < 0 || uv.x > 1) {
-
       switch (this.wrapS) {
-
         case RepeatWrapping:
-
           uv.x = uv.x - Math.floor(uv.x);
           break;
 
         case ClampToEdgeWrapping:
-
           uv.x = uv.x < 0 ? 0 : 1;
           break;
 
         case MirroredRepeatWrapping:
-
           if (Math.abs(Math.floor(uv.x) % 2) === 1) {
-
             uv.x = Math.ceil(uv.x) - uv.x;
-
           } else {
-
             uv.x = uv.x - Math.floor(uv.x);
-
           }
           break;
 
       }
-
     }
 
     if (uv.y < 0 || uv.y > 1) {
-
       switch (this.wrapT) {
-
         case RepeatWrapping:
-
           uv.y = uv.y - Math.floor(uv.y);
           break;
 
         case ClampToEdgeWrapping:
-
           uv.y = uv.y < 0 ? 0 : 1;
           break;
 
         case MirroredRepeatWrapping:
-
           if (Math.abs(Math.floor(uv.y) % 2) === 1) {
 
             uv.y = Math.ceil(uv.y) - uv.y;

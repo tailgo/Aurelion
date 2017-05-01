@@ -628,4 +628,28 @@ export class Matrix4 {
 
     return attribute;
   }
+
+  public extractRotation(m: Matrix4): Matrix4 {
+    let v1 = new Vector3();
+    let te = this.elements;
+    let me = m.elements;
+
+    let scaleX = 1 / v1.setFromMatrixColumn(m, 0).length();
+    let scaleY = 1 / v1.setFromMatrixColumn(m, 1).length();
+    let scaleZ = 1 / v1.setFromMatrixColumn(m, 2).length();
+
+    te[0] = me[0] * scaleX;
+    te[1] = me[1] * scaleX;
+    te[2] = me[2] * scaleX;
+
+    te[4] = me[4] * scaleY;
+    te[5] = me[5] * scaleY;
+    te[6] = me[6] * scaleY;
+
+    te[8] = me[8] * scaleZ;
+    te[9] = me[9] * scaleZ;
+    te[10] = me[10] * scaleZ;
+
+    return this;
+  }
 }

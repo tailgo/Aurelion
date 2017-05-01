@@ -22,7 +22,7 @@ function main() {
   let html = '<!DOCTYPE html>' +
     `<html><head><meta charset="UTF-8"><title>${windowTitle}</title>` +
     '<style>body{margin:0;padding:0;border:0}canvas{display:block}</style></head>' +
-    `<body></body><script src="${renderMainFile}"></script></html>`;
+    `<body><script src="./app/three.js"></script><script src="${renderMainFile}"></script></body></html>`;
 
   fs.writeFileSync('entrance.html', html);
 
