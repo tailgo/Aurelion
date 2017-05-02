@@ -72,7 +72,7 @@ import { WebGLState } from './webgl/WebGLState';
 import { WebGLCapabilities } from './webgl/WebGLCapabilities';
 import { WebGLProperties } from './webgl/WebGLProperties';
 import { WebGLExtensions } from './webgl/WebGLExtensions';
-// import { WebGLShadowMap } from './webgl/WebGLShadowMap';
+import { WebGLShadowMap } from './webgl/WebGLShadowMap';
 import { WebGLIndexedBufferRenderer } from './webgl/WebGLIndexedBufferRenderer';
 import { WebGLBufferRenderer } from './webgl/WebGLBufferRenderer';
 import { WebGLLights } from './webgl/WebGLLights';
@@ -718,9 +718,8 @@ export class WebGLRenderer {
 
     this.context = this._gl;
 
-    // TODO：shadow map
-
-
+    this.shadowMap = new WebGLShadowMap(this, this._lights, this.objects, this.capabilities);
+    // TODO：plugins
   }
 
   public allocTextureUnit() {
@@ -928,7 +927,7 @@ export class WebGLRenderer {
     this.setupShadows(this.lights);
 
     // TODO： shadow map render
-    // shadowMap.render( scene, camera );
+    this.shadowMap.render( scene, camera );
 
     this.setupLights(this.lights, camera);
 
