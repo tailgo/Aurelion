@@ -71,10 +71,13 @@ export class WebGLTextures {
   private paramThreeToGL;
   private infoMemory;
 
+  private _gl;
+
   constructor(
     gl, extensions, state, properties, capabilities, paramThreeToGL, info
   ) {
     this.gl = gl;
+    this._gl = gl;
     this.extensions = extensions;
     this.state = state;
     this.properties = properties;

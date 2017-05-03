@@ -360,12 +360,17 @@ function parseUniform(activeInfo, addr, container) {
     let match = RePathPart.exec(path),
       matchEnd = RePathPart.lastIndex,
 
-      id = parseInt(match[1]),
+      tid = match[1],
       idIsIndex = match[2] === ']',
       subscript = match[3];
 
+    let id;
+
     if (idIsIndex) {
+      id = parseInt(tid);
       id = id | 0; // convert to integer
+    } else {
+      id = tid;
     }
 
     if (subscript === undefined ||
