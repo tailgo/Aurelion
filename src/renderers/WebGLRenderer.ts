@@ -709,7 +709,7 @@ export class WebGLRenderer {
     this.programCache = new WebGLPrograms(this, this.capabilities);
     this.lightCache = new WebGLLights();
 
-    this.info.program = this.programCache.programs;
+    this.info.programs = this.programCache.programs;
 
     this.bufferRenderer = new WebGLBufferRenderer(this._gl, this.extensions, this._infoRender);
     this.indexedBufferRenderer = new WebGLIndexedBufferRenderer(this._gl, this.extensions, this._infoRender);
@@ -1375,6 +1375,8 @@ export class WebGLRenderer {
       this._canvas.style.width = width + 'px';
       this._canvas.style.height = height + 'px';
     }
+
+    this.setViewPort(0, 0, width, height);
   }
 
   public setTexture2D(texture, slot) {
