@@ -11,3 +11,5 @@ export { MeshBasicMaterial } from './materials/MeshBasicMaterial';
 export { Mesh } from './objects/Mesh';
 
 export { WebGLRenderer } from './renderers/WebGLRenderer';
+
+export { Stats } from './Stats';

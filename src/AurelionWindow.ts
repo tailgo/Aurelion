@@ -11,7 +11,7 @@ class AurelionWindow {
   private _gDebug: boolean = false;
 
   private _electronApp: Electron.App;
-  private _electronWindow: Electron.BrowserWindow;
+  private _electronWindow: Array<Electron.BrowserWindow>;
 
   constructor() {
     if (process.argv.indexOf('--dg') > -1) {
@@ -20,6 +20,8 @@ class AurelionWindow {
 
     this._electronApp = electron.app;
     this._electronApp.commandLine.appendSwitch('ignore-gpu-blacklist');
+
+    this._electronWindow = [];
   }
 
   public init(config: string = 'aurelion.json') {
@@ -37,16 +39,19 @@ class AurelionWindow {
       console.log('Start Core Run.');
     }
 
-    this._electronApp.on('ready', this._createWindow);
+    this._electronApp.on('ready', () => {
+      this._createWindow();
+    });
     this._electronApp.on('activate', () => {
-      if (this._electronWindow === null) {
+      if (this._electronWindow.length === 0) {
         this._createWindow();
       }
     });
   }
 
   private _createWindow() {
-    this._electronWindow = new electron.BrowserWindow({
+
+    let win = new electron.BrowserWindow({
       width: 800,
       height: 600,
       webPreferences: {
@@ -55,19 +60,21 @@ class AurelionWindow {
       }
     });
 
-    this._electronWindow.loadURL(url.format({
+    win.loadURL(url.format({
       pathname: path.resolve('entrance.html'),
       protocol: 'file:',
       slashes: true
     }));
 
     if (global['__debug__']) {
-      this._electronWindow.webContents.openDevTools();
+      win.webContents.openDevTools();
     }
 
-    this._electronWindow.on('closed', () => {
-      this._electronWindow = null;
+    win.on('closed', () => {
+      win = null;
     });
+
+    this._electronWindow.push(win);
   }
 }
 
