@@ -111,7 +111,9 @@ export class WebGLTextures {
     if (texture.image.length === 6) {
       if (texture.version > 0 && textureProperties.__version !== texture.version) {
         if (!textureProperties.__image__webglTextureCube) {
-          texture.addEventListener('dispose', this.onTextureDispose);
+          texture.addEventListener('dispose', (event) => {
+            this.onTextureDispose(event);
+          });
           textureProperties.__image__webglTextureCube = this.gl.createTexture();
           this.infoMemory.textures++;
         }
@@ -189,7 +191,9 @@ export class WebGLTextures {
     let renderTargetProperties = this.properties.get(renderTarget);
     let textureProperties = this.properties.get(renderTarget.texture);
 
-    renderTarget.addEventListener('dispose', this.onRenderTargetDispose);
+    renderTarget.addEventListener('dispose', (event) => {
+      this.onRenderTargetDispose(event);
+    });
 
     textureProperties.__webglTexture = this.gl.createTexture();
 
@@ -264,8 +268,8 @@ export class WebGLTextures {
 
   private onTextureDispose(event) {
     let texture = event.target;
-
-    texture.removeEventListener('dispose', this.onTextureDispose);
+    let eventName = this.onTextureDispose;
+    texture.removeEventListener('dispose', eventName);
 
     this.deallocateTexture(texture);
 
@@ -274,8 +278,8 @@ export class WebGLTextures {
 
   private onRenderTargetDispose(event) {
     let renderTarget = event.target;
-
-    renderTarget.removeEventListener('dispose', this.onRenderTargetDispose);
+    let eventName = this.onRenderTargetDispose;
+    renderTarget.removeEventListener('dispose', eventName);
 
     this.deallocateRenderTarget(renderTarget);
 
@@ -369,7 +373,9 @@ export class WebGLTextures {
     if (textureProperties.__webglInit === undefined) {
       textureProperties.__webglInit = true;
 
-      texture.addEventListener('dispose', this.onTextureDispose);
+      texture.addEventListener('dispose', (event) => {
+        this.onTextureDispose(event);
+      });
 
       textureProperties.__webglTexture = this.gl.createTexture();
 

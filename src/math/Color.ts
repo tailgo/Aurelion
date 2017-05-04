@@ -74,6 +74,22 @@ export class Color {
     return this;
   }
 
+  public multiply(color: Color): Color {
+    this.r *= color.r;
+    this.g *= color.g;
+    this.b *= color.b;
+
+    return this;
+  }
+
+  public multiplyScalar(s: number): Color {
+    this.r *= s;
+    this.g *= s;
+    this.b *= s;
+
+    return this;
+  }
+
   public lerp(c: Color, alpha: number): Color {
     this.r += (c.r - this.r) * alpha;
     this.g += (c.g - this.g) * alpha;

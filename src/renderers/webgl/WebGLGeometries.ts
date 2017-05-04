@@ -22,7 +22,9 @@ export class WebGLGeometries {
       return this.geometries[geometry.id];
     }
 
-    geometry.addEventListener('dispose', this.onGeometryDispose);
+    geometry.addEventListener('dispose', (event) => {
+      this.onGeometryDispose(event);
+    });
 
     let buffergeometry;
 

@@ -684,7 +684,9 @@ export class WebGLRenderer {
         return { 'rangeMin': 1, 'rangeMax': 1, 'precision': 1 };
       };
     }
-    this._canvas.addEventListener('webglcontentlost', this.onContextLost, false);
+    this._canvas.addEventListener('webglcontentlost', (event) => {
+      this.onContextLost(event);
+    }, false);
 
     // another things
     this.extensions = new WebGLExtensions(this._gl);
@@ -767,7 +769,9 @@ export class WebGLRenderer {
     this.opaqueObjects = [];
     this.opaqueObjectsLastIndex = -1;
 
-    this._canvas.removeEventListener('webglcontextlost', this.onContextLost, false);
+    this._canvas.removeEventListener('webglcontextlost', (event) => {
+      this.onContextLost(event);
+    }, false);
   }
 
   public forceContextLoss() {
@@ -1361,7 +1365,8 @@ export class WebGLRenderer {
   }
 
   public setScissorTest(v: boolean) {
-    this.state.setScissorTest(this._scissorTest = v);
+    this._scissorTest = v;
+    this.state.setScissorTest(v);
   }
 
   public setSize(width: number, height: number, updateStyle?) {
@@ -1588,7 +1593,9 @@ export class WebGLRenderer {
 
     if (program === undefined) {
       // new material
-      material.addEventListener('dispose', this.onMaterialDispose);
+      material.addEventListener('dispose', (event) => {
+        this.onMaterialDispose(event);
+      });
     } else if (program.code !== code) {
       // changed glsl or parameters
       this.releaseMaterialProgramReference(material);
@@ -2208,8 +2215,8 @@ export class WebGLRenderer {
 
   private onMaterialDispose(event) {
     let material = event.target;
-
-    material.removeEventListener('dispose', this.onMaterialDispose);
+    let eventName = this.onMaterialDispose;
+    material.removeEventListener('dispose', eventName);
 
     this.deallocateMaterial(material);
   }

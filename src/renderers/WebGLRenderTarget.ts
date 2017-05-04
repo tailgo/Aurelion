@@ -1,6 +1,6 @@
 import { EventDispatcher } from '../core/EventDispatcher';
 import { Texture } from '../textures/Texture';
-import { LinearFilter } from '../constants';
+import { LinearFilter } from '../Constants';
 import { Vector4 } from '../math/Vector4';
 import { MathTool } from '../math/MathTool';
 
@@ -22,7 +22,9 @@ export class WebGLRenderTarget extends EventDispatcher {
 
   public depthTexture;
 
-  constructor(width?: number, height?: number, options?) {
+  public isWebGLRenderTarget: boolean;
+
+  constructor(width: number, height: number, options?) {
     super();
 
     this.uuid = MathTool.generateUUID();
@@ -60,7 +62,7 @@ export class WebGLRenderTarget extends EventDispatcher {
   }
 
   public clone() {
-    return new WebGLRenderTarget().copy(this);
+    return new WebGLRenderTarget(this.width, this.height).copy(this);
   }
 
   public copy(source: WebGLRenderTarget) {

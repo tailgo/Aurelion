@@ -65,11 +65,9 @@ export class PlaneBufferGeometry extends BufferGeometry {
 
     // generate vertices, normals and uvs
     for (iy = 0; iy < gridY1; iy++) {
-
       let y = iy * segment_height - height_half;
 
       for (ix = 0; ix < gridX1; ix++) {
-
         let x = ix * segment_width - width_half;
 
         vertices.push(x, - y, 0);
@@ -78,28 +76,22 @@ export class PlaneBufferGeometry extends BufferGeometry {
 
         uvs.push(ix / gridX);
         uvs.push(1 - (iy / gridY));
-
       }
 
     }
 
     // indices
     for (iy = 0; iy < gridY; iy++) {
-
       for (ix = 0; ix < gridX; ix++) {
-
         let a = ix + gridX1 * iy;
         let b = ix + gridX1 * (iy + 1);
         let c = (ix + 1) + gridX1 * (iy + 1);
         let d = (ix + 1) + gridX1 * iy;
 
         // faces
-
         indices.push(a, b, d);
         indices.push(b, c, d);
-
       }
-
     }
 
     // build geometry
