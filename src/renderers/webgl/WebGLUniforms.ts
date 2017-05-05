@@ -4,122 +4,9 @@ import { Texture } from '../../textures/Texture';
 let emptyTexture = new Texture();
 let emptyCubeTexture = new CubeTexture();
 
-class UniformContainer {
-  public seq = [];
-  public map = {};
-}
-
-class SingleUniform {
-  public id;
-  public addr;
-  public setValue: Function;
-
-  constructor(id, activeInfo, addr) {
-    this.id = id;
-    this.addr = addr;
-    this.setValue = getSingularSetter(activeInfo.type);
-  }
-}
-
-class PureArrayUniform {
-  public id;
-  public addr;
-  public size;
-  public setValue: Function;
-
-  constructor(id, activeInfo, addr) {
-    this.id = id;
-    this.addr = addr;
-    this.size = activeInfo.size;
-    this.setValue = getPureArraySetter(activeInfo.type);
-  }
-}
-
-class StructuredUniform extends UniformContainer {
-  public id;
-
-  constructor(id) {
-    super();
-    this.id = id;
-  }
-
-  public setValue1f(gl, value) {
-    let seq = this.seq;
-
-    for (let i = 0, n = seq.length; i !== n; ++i) {
-      let u = seq[i];
-      u.setValue(gl, value[u.id]);
-    }
-  }
-}
-
-export class WebGLUniforms extends UniformContainer {
-
-  public renderer;
-
-  constructor(gl, program, renderer) {
-    super();
-    this.renderer = renderer;
-
-    let n = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-    for (let i = 0; i < n; ++i) {
-      let info = gl.getActiveUniform(program, i),
-        path = info.name,
-        addr = gl.getUniformLocation(program, path);
-
-      parseUniform(info, addr, this);
-    }
-  }
-
-  public setValue(gl, name, value) {
-    let u = this.map[name];
-
-    if (u !== undefined) {
-      u.setValue(gl, value, this.renderer);
-    }
-  }
-
-  public set(gl, object, name) {
-    let u = this.map[name];
-
-    if (u !== undefined) {
-      u.setValue(gl, object[name], this.renderer);
-    }
-  }
-
-  public setOptional(gl, object, name) {
-    let v = object[name];
-
-    if (v !== undefined) {
-      this.setValue(gl, name, v);
-    }
-  }
-
-  public static upload(gl, seq, values, renderer) {
-    for (let i = 0, n = seq.length; i !== n; ++i) {
-      let u = seq[i],
-        v = values[u.id];
-
-      if (v.needsUpdate !== false) {
-        // note: always updating when .needsUpdate is undefined
-        u.setValue(gl, v.value, renderer);
-      }
-
-    }
-  }
-
-  public static seqWithValue(seq, values) {
-    let r = [];
-    for (let i = 0, n = seq.length; i !== n; ++i) {
-      let u = seq[i];
-      if (u.id in values) r.push(u);
-    }
-    return r;
-  }
-
-}
-
-// --- Utilities ---
+/**
+ * --- Utilities ---
+ */
 // Array Caches (provide typed arrays for temporary by size)
 let arrayCacheF32 = [];
 let arrayCacheI32 = [];
@@ -128,12 +15,10 @@ let arrayCacheI32 = [];
 function flatten(array, nBlocks, blockSize) {
   let firstElem = array[0];
 
-  if (firstElem <= 0 || firstElem > 0) {
-    return array;
-  }
-
+  if (firstElem <= 0 || firstElem > 0) return array;
   // unoptimized: ! isNaN( firstElem )
   // see http://jacksondunstan.com/articles/983
+
   let n = nBlocks * blockSize,
     r = arrayCacheF32[n];
 
@@ -155,48 +40,44 @@ function flatten(array, nBlocks, blockSize) {
 // Texture unit allocation
 function allocTexUnits(renderer, n) {
   let r = arrayCacheI32[n];
+
   if (r === undefined) {
     r = new Int32Array(n);
     arrayCacheI32[n] = r;
   }
+
   for (let i = 0; i !== n; ++i) {
     r[i] = renderer.allocTextureUnit();
   }
+
   return r;
 }
 
-// --- Setters ---
-// Note: Defining these methods externally, because they come in a bunch
-// and this way their names minify.
+/**
+ * --- Setters ---
+ */
 // Single scalar
 function setValue1f(gl, v) { gl.uniform1f(this.addr, v); }
 function setValue1i(gl, v) { gl.uniform1i(this.addr, v); }
 
 // Single float vector (from flat array or THREE.VectorN)
 function setValue2fv(gl, v) {
-  if (v.x === undefined) {
-    gl.uniform2fv(this.addr, v);
-  } else {
-    gl.uniform2f(this.addr, v.x, v.y);
-  }
+  if (v.x === undefined) gl.uniform2fv(this.addr, v);
+  else gl.uniform2f(this.addr, v.x, v.y);
 }
 
 function setValue3fv(gl, v) {
-  if (v.x !== undefined) {
+  if (v.x !== undefined)
     gl.uniform3f(this.addr, v.x, v.y, v.z);
-  } else if (v.r !== undefined) {
+  else if (v.r !== undefined)
     gl.uniform3f(this.addr, v.r, v.g, v.b);
-  } else {
+  else
     gl.uniform3fv(this.addr, v);
-  }
 }
 
 function setValue4fv(gl, v) {
-  if (v.x === undefined) {
-    gl.uniform4fv(this.addr, v);
-  } else {
-    gl.uniform4f(this.addr, v.x, v.y, v.z, v.w);
-  }
+  if (v.x === undefined) gl.uniform4fv(this.addr, v);
+  else gl.uniform4f(this.addr, v.x, v.y, v.z, v.w);
 }
 
 // Single matrix (from flat array or MatrixN)
@@ -231,6 +112,7 @@ function setValue3iv(gl, v) { gl.uniform3iv(this.addr, v); }
 function setValue4iv(gl, v) { gl.uniform4iv(this.addr, v); }
 
 // Helper to pick the right setter for the singular case
+
 function getSingularSetter(type) {
   switch (type) {
 
@@ -272,7 +154,6 @@ function setValueV4a(gl, v) {
 }
 
 // Array of matrices (flat or from THREE clases)
-
 function setValueM2a(gl, v) {
   gl.uniformMatrix2fv(this.addr, false, flatten(v, this.size, 4));
 }
@@ -305,7 +186,6 @@ function setValueT6a(gl, v, renderer) {
   for (let i = 0; i !== n; ++i) {
     renderer.setTextureCube(v[i] || emptyCubeTexture, units[i]);
   }
-
 }
 
 // Helper to pick the right setter for a pure (bottom-level) array
@@ -328,14 +208,14 @@ function getPureArraySetter(type) {
     case 0x8b53: case 0x8b57: return setValue2iv; // _VEC2
     case 0x8b54: case 0x8b58: return setValue3iv; // _VEC3
     case 0x8b55: case 0x8b59: return setValue4iv; // _VEC4
-
   }
 }
 
-
-// --- Top-level ---
+/**
+ * --- Top-level ---
+ */
 // Parser - builds up the property tree from the path strings
-let RePathPart = /([\w\d_]+)(\])?(\[|\.)?/g;
+const RePathPart = /([\w\d_]+)(\])?(\[|\.)?/g;
 
 // extracts
 // 	- the identifier (member name or array index)
@@ -356,7 +236,8 @@ function parseUniform(activeInfo, addr, container) {
 
   // reset RegExp object, because of the early exit of a previous run
   RePathPart.lastIndex = 0;
-  for (; ; ) {
+
+  for (; ;) {
     let match = RePathPart.exec(path),
       matchEnd = RePathPart.lastIndex,
 
@@ -379,7 +260,6 @@ function parseUniform(activeInfo, addr, container) {
       addUniform(container, subscript === undefined ?
         new SingleUniform(id, activeInfo, addr) :
         new PureArrayUniform(id, activeInfo, addr));
-
       break;
     } else {
       // step into inner node / create it in case it doesn't exist
@@ -393,5 +273,146 @@ function parseUniform(activeInfo, addr, container) {
       container = next;
     }
   }
+}
 
+/**
+ * Base node
+ */
+class UniformContainer {
+  public seq;
+  public map;
+
+  constructor() {
+    this.seq = [];
+    this.map = {};
+  }
+}
+
+/**
+ * Uniform Classes
+ */
+class SingleUniform {
+  public id;
+  public addr;
+  public setValue: Function;
+
+  constructor(id, activeInfo, addr) {
+    this.id = id;
+    this.addr = addr;
+
+    this.setValue = getSingularSetter(activeInfo.type);
+  }
+}
+
+class PureArrayUniform {
+
+  public id;
+  public addr;
+  public size;
+  public setValue: Function;
+
+  constructor(id, activeInfo, addr) {
+    this.id = id;
+    this.addr = addr;
+    this.size = activeInfo.size;
+
+    this.setValue = getPureArraySetter(activeInfo.type);
+  }
+
+}
+
+class StructuredUniform extends UniformContainer {
+  public id;
+
+  constructor(id) {
+    super();
+    this.id = id;
+  }
+
+  public setValue(gl, value) {
+    let seq = this.seq;
+
+    for (let i = 0, n = seq.length; i !== n; ++i) {
+      let u = seq[i];
+      u.setValue(gl, value[u.id]);
+    }
+  }
+}
+
+/**
+ * Root Container
+ */
+export class WebGLUniforms extends UniformContainer {
+
+  public renderer;
+
+  constructor(gl, program, renderer) {
+    super();
+
+    this.renderer = renderer;
+
+    let n = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+
+    for (let i = 0; i < n; ++i) {
+      let info = gl.getActiveUniform(program, i),
+        path = info.name,
+        addr = gl.getUniformLocation(program, path);
+      parseUniform(info, addr, this);
+    }
+  }
+
+  public setValue(gl, name, value) {
+
+    let u = this.map[name];
+
+    if (u !== undefined) {
+      u.setValue(gl, value, this.renderer);
+    }
+  }
+
+  public set(gl, object, name) {
+
+    let u = this.map[name];
+
+    if (u !== undefined) {
+      u.setValue(gl, object[name], this.renderer);
+    }
+  }
+
+  public setOptional(gl, object, name) {
+
+    let v = object[name];
+
+    if (v !== undefined) {
+      this.setValue(gl, name, v);
+    }
+  }
+
+  public static upload(gl, seq, values, renderer) {
+
+    for (let i = 0, n = seq.length; i !== n; ++i) {
+      let u = seq[i],
+        v = values[u.id];
+
+      if (v.needsUpdate !== false) {
+        // note: always updating when .needsUpdate is undefined
+        u.setValue(gl, v.value, renderer);
+      }
+    }
+  }
+
+  public static seqWithValue(seq, values) {
+
+    let r = [];
+
+    for (let i = 0, n = seq.length; i !== n; ++i) {
+      let u = seq[i];
+
+      if (u.id in values) {
+        r.push(u);
+      }
+    }
+
+    return r;
+  }
 }

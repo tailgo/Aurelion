@@ -1,7 +1,6 @@
 import { Geometry } from '../core/Geometry';
-
-import { Float32BufferAttribute } from '../core/BufferAttribute';
 import { BufferGeometry } from '../core/BufferGeometry';
+import { Float32BufferAttribute } from '../core/BufferAttribute';
 import { Vector3 } from '../math/Vector3';
 
 interface GeometryParameters {
@@ -16,7 +15,6 @@ interface GeometryParameters {
 export class BoxGeometry extends Geometry {
 
   public parameters: GeometryParameters;
-  public type: string;
 
   constructor(
     width: number, height: number, depth: number,
@@ -43,12 +41,12 @@ export class BoxGeometry extends Geometry {
 
 export class BoxBufferGeometry extends BufferGeometry {
 
-  public type: string;
   public parameters: GeometryParameters;
 
-  constructor(width: number, height: number, depth: number,
-  widthSegments: number = 1, heightSegments: number = 1,
-  depthSegments: number = 1
+  constructor(
+    width: number, height: number, depth: number,
+    widthSegments: number = 1, heightSegments: number = 1,
+    depthSegments: number = 1
   ) {
     super();
 
