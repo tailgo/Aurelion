@@ -6,6 +6,8 @@ export class Color {
   public g: number = 1;
   public b: number = 1;
 
+  public isColor: boolean = true;
+
   constructor(r?: number | Color, g?: number, b?: number) {
 
     if (g === undefined && b === undefined) {

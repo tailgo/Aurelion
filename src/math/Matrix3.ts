@@ -5,6 +5,8 @@ export class Matrix3 {
 
   public elements;
 
+  public isMatrix3: boolean = true;
+
   constructor() {
     this.elements = new Float32Array([
       1, 0, 0,

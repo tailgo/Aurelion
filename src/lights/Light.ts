@@ -27,4 +27,8 @@ export class Light extends Object3D {
     return this;
   }
 
+  public clone(source) {
+    return new Light(this.color).copy(this);
+  }
+
 }

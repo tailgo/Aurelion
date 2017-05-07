@@ -9,6 +9,8 @@ export class PointLight extends Light {
 
   public shadow: LightShadow;
 
+  public isPointLight: boolean = true;
+
   constructor(color, intensity, distance: number = 0, decay: number = 1) {
     super(color, intensity);
 

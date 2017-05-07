@@ -7,7 +7,7 @@ let materialId = 0;
 export class Material extends EventDispatcher {
 
   public readonly id: number;
-  public isMateril: boolean;
+  public isMaterial: boolean = true;
   public name: string;
   public type: string;
   public uuid: string;

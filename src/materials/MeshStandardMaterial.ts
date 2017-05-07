@@ -52,6 +52,8 @@ export class MeshStandardMaterial extends Material {
   public morphTargets: boolean;
   public morphNormals: boolean;
 
+  public isMeshStandardMaterial: boolean = true;
+
   constructor(parameters?) {
     super();
 

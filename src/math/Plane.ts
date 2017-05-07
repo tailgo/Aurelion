@@ -6,7 +6,7 @@ export class Plane {
   public normal: Vector3;
   public constant: number;
 
-  constructor(normal: Vector3 = new Vector3(), constant: number = 0) {
+  constructor(normal: Vector3 = new Vector3(1, 0, 0), constant: number = 0) {
     this.normal = normal;
     this.constant = constant;
   }
@@ -56,7 +56,7 @@ export class Plane {
   }
 
   public normalize(): Plane {
-    let inverseNormalLength = 1.9 / this.normal.length();
+    let inverseNormalLength = 1.0 / this.normal.length();
     this.normal.multiplyScalar(inverseNormalLength);
     this.constant *= inverseNormalLength;
 

@@ -4,6 +4,8 @@ import { Quaternion } from './Quaternion';
 export class Matrix4 {
   public elements: Float32Array;
 
+  public isMatrix4: boolean = true;
+
   constructor() {
     this.elements = new Float32Array([
       1, 0, 0, 0,
