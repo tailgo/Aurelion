@@ -48,6 +48,10 @@ export class Color {
     return this;
   }
 
+  public getHex(): number {
+    return (this.r * 255) << 16 ^ (this.g * 255) << 8 ^ (this.b * 255) << 0;
+  }
+
   public clone() {
     return new Color(this.r, this.g, this.b);
   }

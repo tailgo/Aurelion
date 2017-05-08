@@ -12,9 +12,11 @@ export { SphereBufferGeometry } from './geometries/SphereGeometry';
 export { PlaneBufferGeometry } from './geometries/PlaneGeometry';
 
 export { PointLight } from './lights/PointLight';
+export { DirectionalLight } from './lights/DirectionalLight';
 
 export { MeshBasicMaterial } from './materials/MeshBasicMaterial';
 export { MeshStandardMaterial } from './materials/MeshStandardMaterial';
+export { MeshLambertMaterial } from './materials/MeshLambertMaterial';
 
 export { Mesh } from './objects/Mesh';
 
@@ -23,6 +25,7 @@ export { WebGLRenderer } from './renderers/WebGLRenderer';
 export { Stats } from './Stats';
 
 export { Clock } from './core/Clock';
+export { Raycaster } from './core/Raycaster';
 
 // math
 export { Triangle } from './math/Triangle';

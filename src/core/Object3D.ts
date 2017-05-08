@@ -138,7 +138,7 @@ export class Object3D extends EventDispatcher {
 
   }
 
-  public clone(recursive: boolean = true): Object3D {
+  public clone(recursive: boolean = true) {
     return (new Object3D()).copy(this, recursive);
   }
 
@@ -353,5 +353,7 @@ export class Object3D extends EventDispatcher {
     let m = new Matrix4();
     return vector.applyMatrix4(m.getInverse(this.matrixWorld));
   }
+
+  public 	raycast() {}
 
 }
