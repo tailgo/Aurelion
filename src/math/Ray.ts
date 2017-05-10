@@ -86,6 +86,88 @@ export class Ray {
     return t >= 0 ? t : null;
   }
 
+  public distanceSqToSegment(
+    v0: Vector3, v1: Vector3, optionalPointOnRay?, optionalPointOnSegment?
+  ) {
+    let segCenter = new Vector3();
+    let segDir = new Vector3();
+    let diff = new Vector3();
+
+    segCenter.copy(v0).add(v1).multiplyScalar(0.5);
+    segDir.copy(v1).sub(v0).normalize();
+    diff.copy(this.origin).sub(segCenter);
+
+    let segExtent = v0.distanceTo(v1) * 0.5;
+    let a01 = - this.direction.dot(segDir);
+    let b0 = diff.dot(this.direction);
+    let b1 = - diff.dot(segDir);
+    let c = diff.lengthSq();
+    let det = Math.abs(1 - a01 * a01);
+    let s0, s1, sqrDist, extDet;
+
+    if (det > 0) {
+      // The ray and segment are not parallel.
+      s0 = a01 * b1 - b0;
+      s1 = a01 * b0 - b1;
+      extDet = segExtent * det;
+
+      if (s0 >= 0) {
+        if (s1 >= - extDet) {
+          if (s1 <= extDet) {
+            // region 0
+            // Minimum at interior points of ray and segment.
+            let invDet = 1 / det;
+            s0 *= invDet;
+            s1 *= invDet;
+            sqrDist = s0 * (s0 + a01 * s1 + 2 * b0) + s1 * (a01 * s0 + s1 + 2 * b1) + c;
+          } else {
+            // region 1
+            s1 = segExtent;
+            s0 = Math.max(0, - (a01 * s1 + b0));
+            sqrDist = - s0 * s0 + s1 * (s1 + 2 * b1) + c;
+          }
+        } else {
+          // region 5
+          s1 = - segExtent;
+          s0 = Math.max(0, - (a01 * s1 + b0));
+          sqrDist = - s0 * s0 + s1 * (s1 + 2 * b1) + c;
+        }
+      } else {
+        if (s1 <= - extDet) {
+          // region 4
+          s0 = Math.max(0, - (- a01 * segExtent + b0));
+          s1 = (s0 > 0) ? - segExtent : Math.min(Math.max(- segExtent, - b1), segExtent);
+          sqrDist = - s0 * s0 + s1 * (s1 + 2 * b1) + c;
+        } else if (s1 <= extDet) {
+          // region 3
+          s0 = 0;
+          s1 = Math.min(Math.max(- segExtent, - b1), segExtent);
+          sqrDist = s1 * (s1 + 2 * b1) + c;
+        } else {
+          // region 2
+          s0 = Math.max(0, - (a01 * segExtent + b0));
+          s1 = (s0 > 0) ? segExtent : Math.min(Math.max(- segExtent, - b1), segExtent);
+          sqrDist = - s0 * s0 + s1 * (s1 + 2 * b1) + c;
+        }
+      }
+    } else {
+      // Ray and segment are parallel.
+      s1 = (a01 > 0) ? - segExtent : segExtent;
+      s0 = Math.max(0, - (a01 * s1 + b0));
+      sqrDist = - s0 * s0 + s1 * (s1 + 2 * b1) + c;
+    }
+
+    if (optionalPointOnRay) {
+      optionalPointOnRay.copy(this.direction).multiplyScalar(s0).add(this.origin);
+    }
+
+    if (optionalPointOnSegment) {
+      optionalPointOnSegment.copy(segDir).multiplyScalar(s1).add(segCenter);
+    }
+
+    return sqrDist;
+  }
+
   public applyMatrix4(matrix: Matrix4): Ray {
     this.direction.add(this.origin).applyMatrix4(matrix);
     this.origin.applyMatrix4(matrix);

@@ -247,4 +247,11 @@ export class Vector2 {
 
     return this;
   }
+
+  public fromArray(array: Array<number>, offset: number = 0): Vector2 {
+    this.x = array[offset];
+    this.y = array[offset + 1];
+
+    return this;
+  }
 }

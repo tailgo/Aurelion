@@ -354,6 +354,6 @@ export class Object3D extends EventDispatcher {
     return vector.applyMatrix4(m.getInverse(this.matrixWorld));
   }
 
-  public 	raycast() {}
+  public 	raycast(raycaster, intersects) {}
 
 }

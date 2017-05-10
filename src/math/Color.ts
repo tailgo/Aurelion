@@ -107,4 +107,12 @@ export class Color {
   public equals(c: Color): boolean {
     return (c.r === this.r) && (c.g === this.g) && (c.b === this.b);
   }
+
+  public fromArray(array: Array<number>, offset: number = 0): Color {
+    this.r = array[offset];
+    this.g = array[offset + 1];
+    this.b = array[offset + 2];
+
+    return this;
+  }
 }
