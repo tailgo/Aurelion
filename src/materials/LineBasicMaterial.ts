@@ -11,7 +11,7 @@ export class LineBasicMaterial extends Material {
 
   public isLineBasicMaterial: boolean = true;
 
-  constructor(parameters) {
+  constructor(parameters?) {
     super();
 
     this.type = 'LineBasicMaterial';

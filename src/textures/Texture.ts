@@ -21,7 +21,7 @@ export class Texture extends EventDispatcher {
   public uuid: string;
   public name: string;
 
-  public image: HTMLImageElement | Array<HTMLImageElement>;
+  public image;
   public mipmaps;
 
   public mapping: number;
